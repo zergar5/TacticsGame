@@ -2,12 +2,12 @@
 
 namespace TacticsGame.Core.Map;
 
-public class Map
+public class Battlefield
 {
     public Size Size { get; }
     public Tile[,] Tiles { get; }
 
-    public Map(Size size, Tile[,] tiles)
+    public Battlefield(Size size, Tile[,] tiles)
     {
         Size = size;
         Tiles = tiles;

@@ -15,7 +15,6 @@
                                MinHeight="560"
                                MinWidth="500"
                                Padding="0"
-                               Margin="0"
                                Grid.Column="0"
                                BorderBrush="Gray"
                                BorderThickness="0,0,2,0"
