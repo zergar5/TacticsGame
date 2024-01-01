@@ -1,14 +1,14 @@
 ﻿<Window x:Class="TacticsGame.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:sharpGL="clr-namespace:SharpGL.WPF;assembly=SharpGL.WPF"
-        xmlns:local="clr-namespace:TacticsGame"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow"
+        Height="450"
+        Width="800">
     <Grid>
-        <sharpGL:OpenGLControl x:Name="GlWindow"
+        <!--<sharpGL:OpenGLControl x:Name="GlWindow"
                                OpenGLDraw="OpenGLDraw"
                                OpenGLInitialized="OpenGLInitialized"
                                Resized="OpenGLControlResized"
@@ -19,6 +19,19 @@
                                Grid.Column="0"
                                BorderBrush="Gray"
                                BorderThickness="0,0,2,0"
-        />
+        />-->
+        <UserControl x:Name="GamePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <!-- Отображение картинок героев и их HP -->
+                <StackPanel x:Name="unitsList" Orientation="Horizontal"/>
+            </Grid>
+        </UserControl>
     </Grid>
 </Window>
