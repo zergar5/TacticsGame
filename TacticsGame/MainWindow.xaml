@@ -30,7 +30,11 @@
                 </Grid.RowDefinitions>
 
                 <!-- Отображение картинок героев и их HP -->
-                <StackPanel x:Name="unitsList" Orientation="Horizontal"/>
+                <StackPanel
+                    x:Name="unitsList"
+                    Orientation="Horizontal"
+                    Height="100"
+                    Background="CadetBlue"/>
             </Grid>
         </UserControl>
     </Grid>

@@ -11,10 +11,11 @@ namespace TacticsGame
         public int HP { get; set; }
         public ImageSource Image { get; }
 
-        public Unit(string path)
+        public Unit(string path, int hp)
         {
             Name = Path.GetFileName(path);
             Image = BitmapFrame.Create(new Uri(path));
+            HP = hp;
         }
 
     }

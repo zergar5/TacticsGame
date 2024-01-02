@@ -30,14 +30,16 @@ namespace TacticsGame
             //unitsList.ItemsSource = units;
             var path = "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons";
             string[] imagesPath = Directory.GetFiles(path);
-            Image img;            
+            Image img;
+            TextBlock hp;
+            StackPanel group;
 
             var units = new List<Unit>() {
-                new Unit(path + "\\hero1.jpg"),
-                new Unit(path + "\\hero1.jpg"),
-                new Unit(path + "\\hero2.jpg"),
-                new Unit(path + "\\hero1.jpg"),
-                new Unit(path + "\\hero2.jpg")};
+                new Unit(path + "\\hero1.jpg", 80),
+                new Unit(path + "\\hero1.jpg", 100),
+                new Unit(path + "\\hero2.jpg", 70),
+                new Unit(path + "\\hero1.jpg", 50),
+                new Unit(path + "\\hero2.jpg", 1000)};
 
 
             foreach (Unit unit in units)
@@ -45,7 +47,19 @@ namespace TacticsGame
                 img = new Image();
                 img.Height = 80;
                 img.Source = unit.Image;
-                unitsList.Children.Add(img);
+                hp = new TextBlock()
+                {
+                    Text = unit.HP.ToString(),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                group = new StackPanel()
+                {
+                    Orientation = Orientation.Vertical
+                };
+                group.Children.Add(img);
+                group.Children.Add(hp);
+                unitsList.Children.Add(group);
             }
 
             //unitsList.Items.Refresh();
