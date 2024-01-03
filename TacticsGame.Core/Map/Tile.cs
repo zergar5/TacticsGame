@@ -4,10 +4,10 @@ namespace TacticsGame.Core.Map;
 
 public class Tile
 {
-    public Point Location { get; }
-    public TileType Type { get; }
+    public PointF Location { get; }
+    public TileType Type { get; set; }
 
-    public Tile(Point location, TileType type)
+    public Tile(PointF location, TileType type)
     {
         Location = location;
         Type = type;
@@ -17,6 +17,7 @@ public class Tile
 public enum TileType
 {
     Field,
+    Wall,
     Obstacle,
     Abyss
 }

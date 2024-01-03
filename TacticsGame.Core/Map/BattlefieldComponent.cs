@@ -5,9 +5,9 @@ namespace TacticsGame.Core.Map;
 public struct BattlefieldComponent
 {
     public Battlefield Map { get; }
-    public Size TileSize { get; }
+    public SizeF TileSize { get; }
 
-    public BattlefieldComponent(Battlefield map, Size tileSize)
+    public BattlefieldComponent(Battlefield map, SizeF tileSize)
     {
         Map = map;
         TileSize = tileSize;

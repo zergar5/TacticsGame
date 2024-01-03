@@ -4,10 +4,10 @@ namespace TacticsGame.Core.Map;
 
 public class Battlefield
 {
-    public Size Size { get; }
+    public SizeF Size { get; }
     public Tile[,] Tiles { get; }
 
-    public Battlefield(Size size, Tile[,] tiles)
+    public Battlefield(SizeF size, Tile[,] tiles)
     {
         Size = size;
         Tiles = tiles;
