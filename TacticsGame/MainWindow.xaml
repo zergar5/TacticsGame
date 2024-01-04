@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="450"
+        Height="650"
         Width="800">
     <Grid>
         <!--<sharpGL:OpenGLControl x:Name="GlWindow"
@@ -28,13 +28,17 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
                 <!-- Отображение картинок героев и их HP -->
                 <StackPanel
-                    x:Name="unitsList"
-                    Orientation="Horizontal"
+                    x:Name="unitsList"                    
                     Height="100"
-                    Background="CadetBlue"/>
+                    Width="600"
+                    Background="CadetBlue"
+                    Orientation="Horizontal"/>
             </Grid>
         </UserControl>
     </Grid>
