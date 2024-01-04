@@ -70,6 +70,7 @@ public class BattlefieldGenerator
         battlefield.Tiles[3, 5].Type = TileType.Obstacle;
         battlefield.Tiles[3, 6].Type = TileType.Obstacle;
         battlefield.Tiles[3, 7].Type = TileType.Obstacle;
+        battlefield.Tiles[3, 8].Type = TileType.Obstacle;
     }
 
     private void GenerateAbysses(Battlefield battlefield)

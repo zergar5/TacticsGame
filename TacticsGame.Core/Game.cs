@@ -1,6 +1,7 @@
 ﻿using Leopotam.EcsLite;
 using SevenBoldPencil.EasyDi;
 using SharpGL;
+using TacticsGame.Core.Context;
 using TacticsGame.Core.Render;
 using TacticsGame.Core.Scene;
 
@@ -10,19 +11,23 @@ public class Game
 {
     private readonly EcsWorld _world;
 
+    private readonly EntityBuilder _entityBuilder;
+
+    private readonly EcsSystems _setupSystems;
     private EcsSystems _environmentSystems;
     private EcsSystems _renderSystems;
 
     public Game()
     {
         _world = new EcsWorld();
+        _entityBuilder = new EntityBuilder(_world);
 
-        var entity = _world.NewEntity();
+        _world.NewEntity();
 
-        _environmentSystems = new EcsSystems(_world);
-        _environmentSystems
+        _setupSystems = new EcsSystems(_world);
+        _setupSystems
             .Add(new EnvironmentSystem())
-            .Inject(new BattlefieldGenerator.BattlefieldGenerator(), _world)
+            .Inject(new BattlefieldGenerator.BattlefieldGenerator())
             .Init();
     }
 

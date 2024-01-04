@@ -16,8 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Context\" />
     <Folder Include="Scene\" />
     <Folder Include="Textures\Map\" />
+    <Folder Include="Hp\" />
   </ItemGroup>
 
 </Project>
