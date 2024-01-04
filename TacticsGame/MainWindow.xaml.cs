@@ -85,15 +85,13 @@ namespace TacticsGame
                     img.Unloaded += FillInTheQueue;
                     group.Children.Add(img);
                     group.Children.Add(hp);
-                    group.MouseLeftButtonUp += Unit_Select;
+                    group.MouseLeftButtonUp += Remove_Card;
                     unitsList.Children.Add(group);
                 }
 
                 round++;
             }      
 
-                
-            //unitsList.MouseLeftButtonUp += Select_Unit;
             
         }
         private void Select_Unit(object sender, RoutedEventArgs e)
@@ -101,15 +99,16 @@ namespace TacticsGame
             ListBox list = (ListBox)sender;
             var selectedUnitIndex = list.SelectedIndex;
         }
-        private void Unit_Select(object sender, RoutedEventArgs e)
+        private void Remove_Card(object sender, RoutedEventArgs e)
         {
-            unitsList.Children.Remove(unitsList.Children[0]);
-            if (unitsList.Children.Count == 1)
+            unitsList.Children.Remove((StackPanel)sender);
+            var firstCard = (StackPanel)unitsList.Children[0];
+            var secondCard = (StackPanel)unitsList.Children[1];
+            if (firstCard.Children.Count == 1 && secondCard.Children.Count == 1 )
             {
-                var currentUnit = (StackPanel)unitsList.Children[0];
-                var currentText = (TextBlock)currentUnit.Children[0];
-                unitsList.Children.Remove(unitsList.Children[0]);
+                unitsList.Children.Remove(firstCard);
             }
+            
         }
         private void OpenGLDraw(object sender, OpenGLRoutedEventArgs args)
         {
