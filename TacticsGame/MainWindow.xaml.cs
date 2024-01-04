@@ -38,62 +38,21 @@ namespace TacticsGame
             //var units = new List<Image>();
             //unitsList.ItemsSource = units;
             
-            string[] imagesPath = Directory.GetFiles(_path);                
+            string[] imagesPath = Directory.GetFiles(_path);
 
             //var linkedListUnits = new LinkedList<Unit>(_units);
 
+            this.Loaded += FillInTheQueue;
+            
+        }
+
+        private void FillInTheQueue(object sender, RoutedEventArgs e)
+        {            
             while (unitsList.Children.Count < 10)
             {
                 Image img;
                 TextBlock hp;
                 StackPanel group;
-                var plug = new StackPanel();
-
-                var roundText = new TextBlock()
-                {
-                    Height = 100,
-                    Width = 60,
-                    FontSize = 16,
-                    Text = round.ToString(),
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                };
-                plug.Children.Add(roundText);
-                unitsList.Children.Add(plug);
-                foreach (Unit unit in _units)
-                {
-                    img = new Image();
-                    img.Height = 80;
-                    img.Source = unit.Image;
-                    hp = new TextBlock()
-                    {
-                        Text = unit.HP.ToString(),
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center
-                    };
-                    group = new StackPanel()
-                    {
-                        Orientation = Orientation.Vertical
-                    };
-                    img.Unloaded += FillInTheQueue;
-                    group.Children.Add(img);
-                    group.Children.Add(hp);
-                    group.MouseLeftButtonUp += Unit_Select;
-                    unitsList.Children.Add(group);
-                }
-
-                round++;
-            }
-            
-        }
-
-        private void FillInTheQueue(object sender, RoutedEventArgs e)
-        {
-            Image img;
-            TextBlock hp;
-            StackPanel group;
-            if (unitsList.Children.Count < 10)
-            {
                 var plug = new StackPanel();
 
                 var roundText = new TextBlock()
