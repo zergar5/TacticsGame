@@ -1,12 +1,10 @@
-﻿using System.Drawing;
-using Leopotam.EcsLite;
+﻿using Leopotam.EcsLite;
 using SevenBoldPencil.EasyDi;
 using SharpGL;
-using System.IO;
 using SharpGL.SceneGraph.Assets;
+using System.Drawing;
 using TacticsGame.Core.Algorithms;
-using TacticsGame.Core.Map;
-using static System.Net.WebRequestMethods;
+using TacticsGame.Core.Battlefield;
 
 namespace TacticsGame.Core.Render;
 
@@ -41,7 +39,7 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
     {
         _gl.ClearColor(0f, 0f, 0f, 1f);
         _gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT/* | OpenGL.GL_DEPTH_BUFFER_BIT*/);
-        
+
         //_gl.ActiveTexture(OpenGL.GL_TEXTURE0);
         //_gl.BindTexture(OpenGL.GL_TEXTURE_2D, _assetManager.GetTexture("Floor"));
         _gl.Enable(OpenGL.GL_TEXTURE_2D);
@@ -153,5 +151,5 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
         _gl.End();
     }
 
-    
+
 }

@@ -12,7 +12,7 @@ public class EntityBuilder
         _world = world;
     }
 
-    public EntityBuilder Create()
+    public EntityBuilder Init()
     {
         _entity = _world.NewEntity();
 
@@ -33,7 +33,7 @@ public class EntityBuilder
     {
         var templateComponentPool = _world.GetPool<T>();
 
-        if (templateComponentPool.Has(entity)) 
+        if (templateComponentPool.Has(entity))
             throw new Exception("Entity can have only one component of each type");
 
         templateComponentPool.Add(entity) = component;

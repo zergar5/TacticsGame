@@ -2,12 +2,13 @@
 
 public struct MovementComponent
 {
-    public int Range { get; set; }
-    public int RemainingRange { get; set; }
+    public int Movement { get; set; }
+    public int RemainingMovement { get; set; }
 
-    public MovementComponent(int range)
+    public MovementComponent(int movement)
     {
-        Range = range;
+        Movement = movement;
+        RemainingMovement = movement;
     }
 
 }

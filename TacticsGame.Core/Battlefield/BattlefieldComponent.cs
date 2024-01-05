@@ -1,13 +1,13 @@
 ﻿using System.Drawing;
 
-namespace TacticsGame.Core.Map;
+namespace TacticsGame.Core.Battlefield;
 
 public struct BattlefieldComponent
 {
-    public Battlefield Map { get; }
+    public BattlefieldTiles Map { get; }
     public SizeF TileSize { get; }
 
-    public BattlefieldComponent(Battlefield map, SizeF tileSize)
+    public BattlefieldComponent(BattlefieldTiles map, SizeF tileSize)
     {
         Map = map;
         TileSize = tileSize;

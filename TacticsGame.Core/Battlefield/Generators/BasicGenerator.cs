@@ -1,11 +1,10 @@
 ﻿using System.Drawing;
-using TacticsGame.Core.Map;
 
-namespace TacticsGame.Core.BattlefieldGenerator;
+namespace TacticsGame.Core.Battlefield.Generators;
 
-public class BattlefieldGenerator
+public class BasicGenerator : IBattlefieldGenerator
 {
-    private Battlefield Init()
+    private BattlefieldTiles Init()
     {
         var tiles = new Tile[12, 13];
 
@@ -16,16 +15,16 @@ public class BattlefieldGenerator
         {
             for (var j = 0; j < tiles.GetLength(1); j++)
             {
-               tiles[i, j] = new Tile(
-                   new PointF(-0.7f + stepX * j + stepX / 2, -0.7f + stepY * i + stepY / 2), 
-                   TileType.Field);
+                tiles[i, j] = new Tile(
+                    new PointF(-0.7f + stepX * j + stepX / 2, -0.7f + stepY * i + stepY / 2),
+                    TileType.Field);
             }
         }
 
-        return new Battlefield(new SizeF(1.1f, 1.4f), tiles);
+        return new BattlefieldTiles(new SizeF(1.1f, 1.4f), tiles);
     }
 
-    public Battlefield Generate()
+    public BattlefieldTiles Generate()
     {
         var battlefield = Init();
 
@@ -36,7 +35,7 @@ public class BattlefieldGenerator
         return battlefield;
     }
 
-    private void GenerateWalls(Battlefield battlefield)
+    private void GenerateWalls(BattlefieldTiles battlefield)
     {
         battlefield.Tiles[10, 0].Type = TileType.Wall;
         battlefield.Tiles[11, 0].Type = TileType.Wall;
@@ -59,7 +58,7 @@ public class BattlefieldGenerator
         battlefield.Tiles[11, 12].Type = TileType.Wall;
     }
 
-    private void GenerateObstacles(Battlefield battlefield)
+    private void GenerateObstacles(BattlefieldTiles battlefield)
     {
         battlefield.Tiles[9, 2].Type = TileType.Obstacle;
         battlefield.Tiles[9, 3].Type = TileType.Obstacle;
@@ -73,7 +72,7 @@ public class BattlefieldGenerator
         battlefield.Tiles[3, 8].Type = TileType.Obstacle;
     }
 
-    private void GenerateAbysses(Battlefield battlefield)
+    private void GenerateAbysses(BattlefieldTiles battlefield)
     {
         battlefield.Tiles[0, 0].Type = TileType.Abyss;
         battlefield.Tiles[1, 0].Type = TileType.Abyss;

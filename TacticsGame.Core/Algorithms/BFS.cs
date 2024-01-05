@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using TacticsGame.Core.Map;
+﻿using TacticsGame.Core.Battlefield;
 
 namespace TacticsGame.Core.Algorithms;
 
@@ -22,6 +21,8 @@ public class BFS
 
     public List<Tile> FindReachableTiles(int row, int column, int range)
     {
+        //var tuple = new Tuple<int, int>(row, column);
+
         _reachableTiles.Clear();
         _queue.Clear();
         _visitedTiles.Clear();

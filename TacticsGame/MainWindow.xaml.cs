@@ -1,22 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using SharpGL;
+﻿using SharpGL;
 using SharpGL.WPF;
+using System;
+using System.Windows;
+using System.Windows.Threading;
 using TacticsGame.Core;
-using TacticsGame.Core.BattlefieldGenerator;
+using TacticsGame.Core.Battlefield.Generators;
 
 namespace TacticsGame
 {
@@ -28,7 +16,7 @@ namespace TacticsGame
         private Game _game;
         private OpenGL _gl;
         private DispatcherTimer _timer;
-        private readonly BattlefieldGenerator _battlefieldGenerator = new();
+        private readonly BasicGenerator _battlefieldGenerator = new();
         public MainWindow()
         {
             InitializeComponent();
@@ -40,7 +28,7 @@ namespace TacticsGame
         }
 
         private void OpenGLInitialized(object sender, OpenGLRoutedEventArgs args)
-        { 
+        {
             _game = new Game();
             _gl = args.OpenGL;
             _game.InitRenderSystems(args.OpenGL);

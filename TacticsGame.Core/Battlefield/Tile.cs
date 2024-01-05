@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace TacticsGame.Core.Map;
+namespace TacticsGame.Core.Battlefield;
 
 public class Tile
 {

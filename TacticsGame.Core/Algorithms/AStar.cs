@@ -1,4 +1,4 @@
-﻿using TacticsGame.Core.Map;
+﻿using TacticsGame.Core.Battlefield;
 
 namespace TacticsGame.Core.Algorithms;
 
@@ -42,13 +42,13 @@ public class AStar
             var row = currentTile.Item1;
             var column = currentTile.Item2;
 
-            if(currentTile == (targetRow, targetColumn)) break;
+            if (currentTile == (targetRow, targetColumn)) break;
 
             _closedSet.Add(currentTile);
 
             foreach (var neighbor in GetNeighbors(row, column))
             {
-                if(_closedSet.Contains(neighbor)) continue;
+                if (_closedSet.Contains(neighbor)) continue;
 
                 var currentCost = _pathCost[currentTile] + 1;
 
@@ -57,7 +57,7 @@ public class AStar
                     _cameFrom[neighbor] = currentTile;
                     _pathCost[neighbor] = currentCost;
                     var heuristicCost = currentCost +
-                                        HeuristicCostEstimate(neighbor.Item1, neighbor.Item2, 
+                                        HeuristicCostEstimate(neighbor.Item1, neighbor.Item2,
                                             targetRow, targetColumn);
 
                     if (_openSet.UnorderedItems.All(n => n.Element != neighbor))
@@ -69,7 +69,7 @@ public class AStar
         }
 
         ReconstructPath(targetRow, targetColumn);
-        
+
         return _path;
     }
 
