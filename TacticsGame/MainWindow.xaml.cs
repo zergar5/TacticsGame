@@ -26,11 +26,13 @@ namespace TacticsGame
         private static string _path = "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons";
         private List<Unit> _units = new List<Unit>{
                 new(_path + "\\hero1.jpg", 80),
-                new(_path + "\\hero1.jpg", 100),
                 new(_path + "\\hero2.jpg", 70),
-                new(_path + "\\hero1.jpg", 50),
+                new(_path + "\\hero1.jpg", 70),
+                new(_path + "\\hero1.jpg", 70),
+                new(_path + "\\hero1.jpg", 70),
                 new(_path + "\\hero2.jpg", 1000)};
-        private int round = 1;
+        private int _round = 1;
+        private int _info = 0;
 
         public MainWindow()
         {
@@ -47,52 +49,66 @@ namespace TacticsGame
         }
 
         private void FillInTheQueue(object sender, RoutedEventArgs e)
-        {            
+        {
+          
             while (unitsList.Children.Count < 10)
             {
-                Image img;
-                TextBlock hp;
-                StackPanel group;
-                var plug = new StackPanel();
-
-                var roundText = new TextBlock()
+                if (_round != 1 && _info == 6)
                 {
-                    Height = 100,
-                    Width = 60,
-                    FontSize = 16,
-                    Text = round.ToString(),
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                };
-                plug.Children.Add(roundText);
-                unitsList.Children.Add(plug);
+                    var plug = new StackPanel();
 
-                foreach (Unit unit in _units)
-                {
-                    img = new Image();
-                    img.Height = 80;
-                    img.Source = unit.Image;
-                    hp = new TextBlock()
+                    var roundText = new TextBlock()
                     {
-                        Text = unit.HP.ToString(),
+                        Height = 95,
+                        Width = 50,
+                        FontSize = 16,
+                        Text = _round.ToString(),
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment = VerticalAlignment.Center
                     };
-                    group = new StackPanel()
-                    {
-                        Orientation = Orientation.Vertical
-                    };
-                    img.Unloaded += FillInTheQueue;
-                    group.Children.Add(img);
-                    group.Children.Add(hp);
-                    group.MouseLeftButtonUp += Remove_Card;
-                    unitsList.Children.Add(group);
+                    plug.Children.Add(roundText);
+                    unitsList.Children.Add(plug);
+                    _info = 0;
                 }
 
-                round++;
-            }      
+                Image img;
+                TextBlock hp;
+                StackPanel group;
+                
+                
+                var unit = _units[0];
+                img = new Image();
+                img.Height = 60;
+                img.Width = 50;
+                img.Source = unit.Image;
+                hp = new TextBlock()
+                {
+                    Text = unit.HP.ToString(),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                group = new StackPanel()
+                {
+                    Orientation = Orientation.Vertical
+                };
+                img.Unloaded += FillInTheQueue;
+                group.Children.Add(img);
+                group.Children.Add(hp);
+                group.MouseLeftButtonUp += Remove_Card;
+                unitsList.Children.Add(group);
 
-            
+                _info++;
+
+                _units.RemoveAt(0);
+                _units.Add(unit);
+                if (_info == 6)
+                {
+                    _round++;
+                }
+            }
+
+
+
         }
         private void Select_Unit(object sender, RoutedEventArgs e)
         {
