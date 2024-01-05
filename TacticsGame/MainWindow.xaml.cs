@@ -72,28 +72,23 @@ namespace TacticsGame
                 }
 
                 Image img;
-                TextBlock hp;
+                ProgressBar hp;
                 StackPanel group;
                 
                 
                 var unit = _units[0];
                 img = new Image();
                 img.Height = 60;
-                img.Width = 50;
                 img.Source = unit.Image;
-                hp = new TextBlock()
-                {
-                    Text = unit.HP.ToString(),
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                };
+                
+                
                 group = new StackPanel()
                 {
                     Orientation = Orientation.Vertical
                 };
                 img.Unloaded += FillInTheQueue;
                 group.Children.Add(img);
-                group.Children.Add(hp);
+                AddHealthBar(group);
                 group.MouseLeftButtonUp += Remove_Card;
                 unitsList.Children.Add(group);
 
@@ -110,10 +105,33 @@ namespace TacticsGame
 
 
         }
-        private void Select_Unit(object sender, RoutedEventArgs e)
+        private void AddHealthBar(StackPanel group)
         {
-            ListBox list = (ListBox)sender;
-            var selectedUnitIndex = list.SelectedIndex;
+            ProgressBar healthBar = new ProgressBar();
+            healthBar.Minimum = 0;
+            healthBar.Maximum = 100;
+            healthBar.Value = 100;
+            healthBar.Height = 10;
+            healthBar.Width = 45;
+            healthBar.Loaded += HealthBar_Loaded; // подписываемся на событие Loaded
+                                                  // добавляем ProgressBar на контейнер
+           group.Children.Add(healthBar);
+        }
+
+        private void HealthBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            ProgressBar healthBar = sender as ProgressBar;
+            if (healthBar != null)
+            {
+                // выполнение инициализации ProgressBar
+                int hp = 100; // пример значения HP
+                UpdateHealthBar(healthBar, hp); // вызываем метод обновления HP
+            }
+        }
+
+        private void UpdateHealthBar(ProgressBar healthBar, int hp)
+        {
+            healthBar.Value = hp;
         }
         private void Remove_Card(object sender, RoutedEventArgs e)
         {

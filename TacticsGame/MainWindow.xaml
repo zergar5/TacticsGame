@@ -31,12 +31,10 @@
                     <ImageBrush
                         ImageSource="C:\Текстуры для игры\Panel1.png"
                         Stretch="Uniform"/>
-                </Grid.Background>
+                </Grid.Background>            
             <!-- Отображение картинок героев и их HP -->
                 <StackPanel x:Name="unitsList"
                             Orientation="Horizontal"
-                            Height="Auto"
-                            Width="502"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">                
             </StackPanel>
