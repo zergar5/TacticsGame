@@ -55,39 +55,20 @@ namespace TacticsGame
             {
                 if (_round != 1 && _info == 6)
                 {
-                    var plug = new StackPanel();
-
-                    var roundText = new TextBlock()
-                    {
-                        Height = 95,
-                        Width = 50,
-                        FontSize = 16,
-                        Text = _round.ToString(),
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center
-                    };
-                    plug.Children.Add(roundText);
-                    unitsList.Children.Add(plug);
+                    AddRoundCard(unitsList);
                     _info = 0;
                 }
-
-                Image img;
-                ProgressBar hp;
+                                
                 StackPanel group;
-                
-                
+                                
                 var unit = _units[0];
-                img = new Image();
-                img.Height = 60;
-                img.Source = unit.Image;
-                
-                
+
                 group = new StackPanel()
                 {
                     Orientation = Orientation.Vertical
                 };
-                img.Unloaded += FillInTheQueue;
-                group.Children.Add(img);
+                                
+                AddUnitImage(unit, group);
                 AddHealthBar(group);
                 group.MouseLeftButtonUp += Remove_Card;
                 unitsList.Children.Add(group);
@@ -105,6 +86,31 @@ namespace TacticsGame
 
 
         }
+        private void AddRoundCard(StackPanel unitsList)
+        {
+            var roundCard = new StackPanel();
+
+            var roundText = new TextBlock()
+            {
+                Height = 95,
+                Width = 50,
+                FontSize = 16,
+                Text = _round.ToString(),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            roundCard.Children.Add(roundText);
+            unitsList.Children.Add(roundCard);
+        }
+        private void AddUnitImage(Unit unit, StackPanel group)
+        {
+            Image img = new Image();
+            img.Height = 60;
+            img.Source = unit.Image;
+            img.Unloaded += FillInTheQueue;
+
+            group.Children.Add(img);
+        }
         private void AddHealthBar(StackPanel group)
         {
             ProgressBar healthBar = new ProgressBar();
@@ -120,8 +126,7 @@ namespace TacticsGame
 
         private void HealthBar_Loaded(object sender, RoutedEventArgs e)
         {
-            ProgressBar healthBar = sender as ProgressBar;
-            if (healthBar != null)
+            if (sender is ProgressBar healthBar)
             {
                 // выполнение инициализации ProgressBar
                 int hp = 100; // пример значения HP
