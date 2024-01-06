@@ -20,24 +20,30 @@
                                BorderBrush="Gray"
                                BorderThickness="0,0,2,0"
         />-->
-        <Grid x:Name="panelArea" Height="150" VerticalAlignment="Top">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>                   
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.Background>
-                    <ImageBrush
+        <Grid x:Name="panelArea" MinHeight="150" VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.Background>
+                <ImageBrush
                         ImageSource="C:\Текстуры для игры\Panel1.png"
                         Stretch="Uniform"/>
-                </Grid.Background>            
+            </Grid.Background>
+			
             <!-- Отображение картинок героев и их HP -->
-                <StackPanel x:Name="unitsList"
+			
+		<StackPanel  x:Name="unitsList"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center">                
+                            VerticalAlignment="Center"
+					        MaxHeight="200"
+					 
+						    
+			>
             </StackPanel>
-            </Grid>
+        </Grid>
     </Grid>
 </Window>
