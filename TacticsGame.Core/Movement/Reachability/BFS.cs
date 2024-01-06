@@ -1,16 +1,16 @@
 ﻿using TacticsGame.Core.Battlefield;
 
-namespace TacticsGame.Core.Algorithms;
+namespace TacticsGame.Core.Movement.Reachability;
 
 public class BFS
 {
-    private readonly Tile[,] _tiles;
+    private readonly BattlefieldTiles _tiles;
     private readonly List<Tile> _reachableTiles;
     private readonly Queue<(int, int, int)> _queue;
     private readonly HashSet<(int, int)> _visitedTiles;
     private readonly List<(int, int)> _neighbors;
 
-    public BFS(Tile[,] tiles)
+    public BFS(BattlefieldTiles tiles)
     {
         _tiles = tiles;
         _reachableTiles = new List<Tile>();
@@ -19,33 +19,28 @@ public class BFS
         _neighbors = new List<(int, int)>();
     }
 
-    public List<Tile> FindReachableTiles(int row, int column, int range)
+    public List<Tile> FindReachableTiles(int startRow, int startColumn, int movement)
     {
-        //var tuple = new Tuple<int, int>(row, column);
-
         _reachableTiles.Clear();
         _queue.Clear();
         _visitedTiles.Clear();
 
-        _queue.Enqueue((row, column, 0));
-        _visitedTiles.Add((row, column));
+        _queue.Enqueue((startRow, startColumn, 0));
+        _visitedTiles.Add((startRow, startColumn));
 
         while (_queue.Count > 0)
         {
-            var currentTile = _queue.Dequeue();
-            row = currentTile.Item1;
-            column = currentTile.Item2;
-            var traveledRange = currentTile.Item3;
+            var (currentRow, currentColumn, traveledDistance) = _queue.Dequeue();
 
-            if (traveledRange > range) continue;
+            if (traveledDistance > movement) continue;
 
-            _reachableTiles.Add(_tiles[row, column]);
+            _reachableTiles.Add(_tiles[currentRow, currentColumn]);
 
-            foreach (var neighbor in GetNeighbors(row, column))
+            foreach (var neighbor in GetNeighbors(currentRow, currentColumn))
             {
                 if (_visitedTiles.Contains(neighbor)) continue;
 
-                _queue.Enqueue((neighbor.Item1, neighbor.Item2, traveledRange + 1));
+                _queue.Enqueue((neighbor.Item1, neighbor.Item2, traveledDistance + 1));
 
                 _visitedTiles.Add(neighbor);
             }
@@ -68,12 +63,12 @@ public class BFS
             _neighbors.Add((row - 1, column));
         }
 
-        if (column < _tiles.GetLength(1) - 1 && _tiles[row, column + 1].Type == TileType.Field)
+        if (column < _tiles.CountColumns - 1 && _tiles[row, column + 1].Type == TileType.Field)
         {
             _neighbors.Add((row, column + 1));
         }
 
-        if (row < _tiles.GetLength(0) - 1 && _tiles[row + 1, column].Type == TileType.Field)
+        if (row < _tiles.CountRows - 1 && _tiles[row + 1, column].Type == TileType.Field)
         {
             _neighbors.Add((row + 1, column));
         }

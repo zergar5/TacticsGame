@@ -1,10 +1,10 @@
 ﻿using TacticsGame.Core.Battlefield;
 
-namespace TacticsGame.Core.Algorithms;
+namespace TacticsGame.Core.Movement.Pathfinding;
 
 public class AStar
 {
-    private readonly Tile[,] _tiles;
+    private readonly BattlefieldTiles _tiles;
     private readonly List<Tile> _path;
     private readonly PriorityQueue<(int, int), int> _openSet;
     private readonly HashSet<(int, int)> _closedSet;
@@ -12,7 +12,7 @@ public class AStar
     private readonly Dictionary<(int, int), int> _pathCost;
     private readonly List<(int, int)> _neighbors;
 
-    public AStar(Tile[,] tiles)
+    public AStar(BattlefieldTiles tiles)
     {
         _tiles = tiles;
         _path = new List<Tile>();
@@ -87,12 +87,12 @@ public class AStar
             _neighbors.Add((row - 1, column));
         }
 
-        if (column < _tiles.GetLength(1) - 1 && _tiles[row, column + 1].Type == TileType.Field)
+        if (column < _tiles.CountColumns - 1 && _tiles[row, column + 1].Type == TileType.Field)
         {
             _neighbors.Add((row, column + 1));
         }
 
-        if (row < _tiles.GetLength(0) - 1 && _tiles[row + 1, column].Type == TileType.Field)
+        if (row < _tiles.CountRows - 1 && _tiles[row + 1, column].Type == TileType.Field)
         {
             _neighbors.Add((row + 1, column));
         }

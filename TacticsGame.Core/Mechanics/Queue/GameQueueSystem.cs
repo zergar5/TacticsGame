@@ -29,6 +29,6 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
 
     public void Run(IEcsSystems systems)
     {
-        
+
     }
 }

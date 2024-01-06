@@ -3,8 +3,9 @@ using SevenBoldPencil.EasyDi;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System.Drawing;
-using TacticsGame.Core.Algorithms;
 using TacticsGame.Core.Battlefield;
+using TacticsGame.Core.Movement.Reachability;
+using TacticsGame.Core.Units;
 
 namespace TacticsGame.Core.Render;
 
@@ -12,14 +13,20 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
 {
     [EcsInject] private OpenGL _gl;
 
+    private EcsFilter _currentUnitFilter;
+
     private EcsPool<BattlefieldComponent> _battlefields;
+    private EcsPool<ReachableTilesComponent> _reachableTiles;
     private Texture _texture;
 
     public void Init(IEcsSystems systems)
     {
         var world = systems.GetWorld();
 
+        _currentUnitFilter = world.Filter<CurrentUnitMarker>().End();
+
         _battlefields = world.GetPool<BattlefieldComponent>();
+        _reachableTiles = world.GetPool<ReachableTilesComponent>();
 
         _gl.Disable(OpenGL.GL_DEPTH_TEST);
 
@@ -48,13 +55,13 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
         _gl.Begin(OpenGL.GL_TRIANGLE_FAN);
 
         _gl.TexCoord(0f, 1f);
-        _gl.Vertex(-1f, -1f);
+        _gl.Vertex(-8f, -4.5f);
         _gl.TexCoord(1f, 1f);
-        _gl.Vertex(1f, -1f);
+        _gl.Vertex(8f, -4.5f);
         _gl.TexCoord(1f, 0f);
-        _gl.Vertex(1f, 1f);
+        _gl.Vertex(8f, 4.5f);
         _gl.TexCoord(0f, 0f);
-        _gl.Vertex(-1f, 1f);
+        _gl.Vertex(-8f, 4.5f);
 
         _gl.End();
 
@@ -68,14 +75,14 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
     {
         var component = _battlefields.Get(0);
 
-        var tiles = component.Map.Tiles;
+        var tiles = component.Map;
         var tileSize = component.TileSize;
 
         _gl.LineWidth(2);
 
-        for (var i = 0; i < tiles.GetLength(0); i++)
+        for (var i = 0; i < tiles.CountRows; i++)
         {
-            for (var j = 0; j < tiles.GetLength(1); j++)
+            for (var j = 0; j < tiles.CountColumns; j++)
             {
                 if (tiles[i, j].Type != TileType.Field) continue;
 
@@ -95,60 +102,28 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
         }
     }
 
-    private void RenderBackground()
-    {
-
-    }
-
     private void RenderReachableTiles()
     {
-        var component = _battlefields.Get(0);
-
-        var tileSize = component.TileSize;
-
-        var bfs = new BFS(component.Map.Tiles);
-
-        var reachableTiles = bfs.FindReachableTiles(6, 7, 5);
-
-        var stile = component.Map.Tiles[6, 7];
-
-        _gl.Begin(OpenGL.GL_TRIANGLE_FAN);
-        _gl.Color(0f, 1f, 0f, 1f);
-
-        _gl.Vertex(stile.Location.X - tileSize.Width / 2, stile.Location.Y - tileSize.Height / 2);
-        _gl.Vertex(stile.Location.X + tileSize.Width / 2, stile.Location.Y - tileSize.Height / 2);
-        _gl.Vertex(stile.Location.X + tileSize.Width / 2, stile.Location.Y + tileSize.Height / 2);
-        _gl.Vertex(stile.Location.X - tileSize.Width / 2, stile.Location.Y + tileSize.Height / 2);
-        _gl.End();
-
-        foreach (var tile in reachableTiles)
+        foreach (var currentUnit in _currentUnitFilter)
         {
-            _gl.Begin(OpenGL.GL_TRIANGLE_FAN);
+            var reachableTiles = _reachableTiles.Get(currentUnit).ReachableTiles;
 
-            _gl.Color(0.5f, 0.5f, 0.5f, 0.95f);
+            var tileSize = new SizeF(0.5f, 0.5f);
 
-            _gl.Vertex(tile.Location.X - tileSize.Width / 2, tile.Location.Y - tileSize.Height / 2);
-            _gl.Vertex(tile.Location.X + tileSize.Width / 2, tile.Location.Y - tileSize.Height / 2);
-            _gl.Vertex(tile.Location.X + tileSize.Width / 2, tile.Location.Y + tileSize.Height / 2);
-            _gl.Vertex(tile.Location.X - tileSize.Width / 2, tile.Location.Y + tileSize.Height / 2);
+            foreach (var tile in reachableTiles)
+            {
+                _gl.Begin(OpenGL.GL_TRIANGLE_FAN);
 
-            _gl.End();
+                _gl.Color(0.5f, 0.5f, 0.5f, 0.95f);
+
+                _gl.Vertex(tile.Location.X - tileSize.Width / 2, tile.Location.Y - tileSize.Height / 2);
+                _gl.Vertex(tile.Location.X + tileSize.Width / 2, tile.Location.Y - tileSize.Height / 2);
+                _gl.Vertex(tile.Location.X + tileSize.Width / 2, tile.Location.Y + tileSize.Height / 2);
+                _gl.Vertex(tile.Location.X - tileSize.Width / 2, tile.Location.Y + tileSize.Height / 2);
+
+                _gl.End();
+            }
         }
-
-        var aStar = new AStar(component.Map.Tiles);
-
-        var path = aStar.FindPath(6, 7, 2, 8);
-
-        _gl.Begin(OpenGL.GL_LINE_STRIP);
-
-        foreach (var tile in path)
-        {
-            _gl.Color(0f, 0f, 1f, 1f);
-
-            _gl.Vertex(tile.Location.X, tile.Location.Y);
-        }
-
-        _gl.End();
     }
 
 

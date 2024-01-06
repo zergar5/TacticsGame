@@ -2,12 +2,14 @@
 
 namespace TacticsGame.Core.Movement;
 
-public struct TransformComponent
+public struct LocationComponent
 {
+    public (int, int) TileIndex { get; set; }
     public PointF Location { get; set; }
 
-    public TransformComponent(PointF location)
+    public LocationComponent(/*(int , int) tileIndex, */PointF location)
     {
+        //TileIndex = tileIndex; 
         Location = location;
     }
 }

@@ -11,7 +11,7 @@ public class UnitsRenderSystem : IEcsInitSystem, IEcsRunSystem
     [EcsInject] private OpenGL _gl;
 
     private EcsFilter _units;
-    private EcsPool<TransformComponent> _transforms;
+    private EcsPool<LocationComponent> _transforms;
 
     public void Init(IEcsSystems systems)
     {
@@ -19,7 +19,7 @@ public class UnitsRenderSystem : IEcsInitSystem, IEcsRunSystem
 
         _units = world.Filter<UnitProfileComponent>().End();
 
-        _transforms = world.GetPool<TransformComponent>();
+        _transforms = world.GetPool<LocationComponent>();
     }
 
     public void Run(IEcsSystems systems)
