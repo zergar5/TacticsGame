@@ -28,11 +28,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Grid.Background>
+            <!--<Grid.Background>
                 <ImageBrush
                         ImageSource="C:\Programming\UNI_Projects\TacticsGame\TacticsGame\UIcons\CroppedPanel.png"
                         Stretch="Uniform"/>
-            </Grid.Background>
+            </Grid.Background>-->
 			
             <!-- Отображение картинок героев и их HP -->
 			

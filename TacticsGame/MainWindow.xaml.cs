@@ -39,7 +39,7 @@ namespace TacticsGame
             string[] imagesPath = Directory.GetFiles(_path);
 
             unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.5 });
-            panelArea.SetBinding(Grid.WidthProperty, new Binding("ActualWidth") { Source = unitsList, Converter = new PercentConverter(), ConverterParameter = 2 });
+            
             this.Loaded += FillInTheQueue;
 
 

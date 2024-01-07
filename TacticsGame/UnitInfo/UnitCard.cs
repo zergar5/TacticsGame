@@ -22,11 +22,9 @@ namespace TacticsGame
             border.BorderBrush = Brushes.Black;
             //border.Margin = new Thickness(10);
             //border.Padding = new Thickness(5);
-            border.Width = double.NaN; // автоматический размер по содержимому
-            border.Height = double.NaN;
-            StackPanel stackPanel = (StackPanel)Application.Current.MainWindow.FindName("unitsList");
-            border.SetBinding(Border.WidthProperty, new Binding("ActualWidth") { Source = stackPanel, Converter = new PercentConverter(), ConverterParameter = 0.1 });
-
+            //StackPanel stackPanel = (StackPanel)Application.Current.MainWindow.FindName("unitsList");
+            //border.SetBinding(Border.WidthProperty, new Binding("ActualWidth") { Source = stackPanel, Converter = new PercentConverter(), ConverterParameter = 0.1 });
+            border.SetBinding(Border.WidthProperty, new Binding("ActualWidth") { Source = Application.Current.MainWindow, Converter = new PercentConverter(), ConverterParameter = 0.05 });
 
             var grid = new Grid();
             grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
@@ -71,8 +69,6 @@ namespace TacticsGame
             border.BorderBrush = Brushes.Black;
             //border.Margin = new Thickness(10);
             //border.Padding = new Thickness(5);
-            border.Width = double.NaN; // автоматический размер по содержимому
-            border.Height = double.NaN;
             //StackPanel stackPanel = (StackPanel)Application.Current.MainWindow.FindName("unitsList");
             //border.SetBinding(Border.WidthProperty, new Binding("ActualWidth") { Source = stackPanel, Converter = new PercentConverter(), ConverterParameter = 0.1 });
             border.SetBinding(Border.WidthProperty, new Binding("ActualWidth") { Source = Application.Current.MainWindow, Converter = new PercentConverter(), ConverterParameter = 0.05 });
