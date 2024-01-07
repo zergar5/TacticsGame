@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="650"
-        Width="800">
+        MinHeight="450"
+        MinWidth="800"
+        SizeChanged="Window_SizeChanged">
     <Grid>
         <!--<sharpGL:OpenGLControl x:Name="GlWindow"
                                OpenGLDraw="OpenGLDraw"
@@ -20,7 +21,7 @@
                                BorderBrush="Gray"
                                BorderThickness="0,0,2,0"
         />-->
-        <Grid x:Name="panelArea" MinHeight="150" VerticalAlignment="Top">
+        <Grid x:Name="panelArea" VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -39,8 +40,8 @@
                             Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
+                     Background="BlueViolet" 
                             Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Window}}"
-                            MaxHeight="200"
 			>
             </StackPanel>
         </Grid>

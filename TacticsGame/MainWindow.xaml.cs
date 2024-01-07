@@ -29,6 +29,7 @@ namespace TacticsGame
                 new ("Unit 6", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 100, 100)};
         private int _round = 1;
         private int _info = 0;
+        private bool isResizing = false;
 
 
         public MainWindow()
@@ -40,14 +41,35 @@ namespace TacticsGame
             string[] imagesPath = Directory.GetFiles(_path);
 
             //var linkedListUnits = new LinkedList<Unit>(_units);
-            unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.4 });
-            unitsList.SetBinding(StackPanel.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.4 });
+            unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.5 });
+            //unitsList.SetBinding(StackPanel.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.1 });
 
             this.Loaded += FillInTheQueue;
             
 
         }
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (!isResizing)
+            {
+                isResizing = true;
 
+                double aspectRatio = 16.0 / 9.0;
+                double newWidth = e.NewSize.Height * aspectRatio;
+                double newHeight = e.NewSize.Width / aspectRatio;
+
+                if (newWidth > e.NewSize.Width)
+                {
+                    this.Width = newWidth;
+                }
+                else
+                {
+                    this.Height = newHeight;
+                }
+
+                isResizing = false;
+            }
+        }
         private void FillInTheQueue(object sender, RoutedEventArgs e)
         {
 
