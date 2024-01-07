@@ -27,7 +27,8 @@ namespace TacticsGame
                 new ("Unit 4", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u001.jpg", 14, 100),
                 new ("Unit 5", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u002.jpg", 98, 100),
                 new ("Unit 6", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u002.jpg", 100, 100)};
-        private RoundCard _round = new("C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\newR.png");
+        private int _roundNumber = 1;
+        private RoundCard _round = new("C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\scull.png");
         private int _info = 0;
         private bool isResizing = false;
 
@@ -43,7 +44,7 @@ namespace TacticsGame
             passButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
             unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.5 });
             
-            this.Loaded += FillInTheQueue;
+            Loaded += FillInTheQueue;
 
 
         }
@@ -74,9 +75,9 @@ namespace TacticsGame
 
             while (unitsList.Children.Count < 10)
             {
-                if (_info == 6)
+                if (_roundNumber != 1 && _info == 6)
                 {
-                    var roundCard = _round.CreateRoundBorder();
+                    var roundCard = _round.CreateRoundBorder(_roundNumber);
                     roundCard.Unloaded += FillInTheQueue;
                     unitsList.Children.Add(roundCard);
                     _info = 0;
@@ -104,10 +105,10 @@ namespace TacticsGame
 
                 _units.RemoveAt(0);
                 _units.Add(unit);
-                //if (_info == 6)
-                //{
-                //    _round++;
-                //}
+                if (_info == 6)
+                {
+                    _roundNumber++;
+                }
             }
 
 

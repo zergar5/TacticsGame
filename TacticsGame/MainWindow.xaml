@@ -44,14 +44,15 @@
 			>
             </StackPanel>
         </Grid>
-        <Grid x:Name="bottomPanel" VerticalAlignment="Bottom">
+        <Grid x:Name="bottomPanelGrid" VerticalAlignment="Bottom">
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal"
+            <StackPanel x:Name="bottomPanel"
+                        Orientation="Horizontal"
                         HorizontalAlignment="Center">
                 <Button x:Name="laserButton"
                         Padding="2"
