@@ -91,7 +91,8 @@ namespace TacticsGame
             healthPoints.Value = (double)Health / MaxHealth * 100;
             healthPoints.MinHeight = 10;
             healthPoints.Height = border.Height - image.Height;
-            healthPoints.Background = new SolidColorBrush(Color.FromArgb(0x69, 0x69, 0x69, 0x69));
+            //healthPoints.Background = new SolidColorBrush(Color.FromArgb(0x69, 0x69, 0x69, 0x69));
+            healthPoints.Background = new SolidColorBrush(Color.FromRgb(0x24, 0x1e, 0x29));
             healthPoints.Foreground = new SolidColorBrush(Color.FromRgb(0x32, 0xCD, 0x32));
             Grid.SetRow(healthPoints, 1);
 

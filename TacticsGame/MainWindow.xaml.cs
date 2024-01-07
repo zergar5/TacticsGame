@@ -21,12 +21,12 @@ namespace TacticsGame
         //        new(_path + "\\hero1.jpg", 70),
         //        new(_path + "\\hero2.jpg", 1000)};
         private List<UnitCard> _units = new List<UnitCard>{
-                new ("Unit 1", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 75, 100),
-                new ("Unit 2", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 80, 100),
-                new ("Unit 3", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 45, 45),
-                new ("Unit 4", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 14, 100),
-                new ("Unit 5", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 98, 100),
-                new ("Unit 6", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 100, 100)};
+                new ("Unit 1", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u001.jpg", 75, 100),
+                new ("Unit 2", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u001.jpg", 80, 100),
+                new ("Unit 3", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u002.jpg", 45, 45),
+                new ("Unit 4", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u001.jpg", 14, 100),
+                new ("Unit 5", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u002.jpg", 98, 100),
+                new ("Unit 6", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u002.jpg", 100, 100)};
         private RoundCard _round = new("C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\newR.png");
         private int _info = 0;
         private bool isResizing = false;
@@ -39,6 +39,8 @@ namespace TacticsGame
             string[] imagesPath = Directory.GetFiles(_path);
             laserButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.1 });
             laserButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
+            passButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
+            passButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
             unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.5 });
             
             this.Loaded += FillInTheQueue;

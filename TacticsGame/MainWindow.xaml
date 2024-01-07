@@ -51,11 +51,22 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
                 <Button x:Name="laserButton"
+                        Padding="2"
                         Margin="0, 0, 0, 10"
                         Background="#d1d1d1">
                     <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame\UIcons\laser.png"
+                           Stretch="Uniform" 
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"></Image>
+                </Button>
+                <Button x:Name="passButton"
+                        Padding="2"
+                        Margin="0, 0, 0, 10"
+                        Background="#d1d1d1">
+                                    <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame\UIcons\pass.png"
                            Stretch="Uniform" 
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"></Image>
