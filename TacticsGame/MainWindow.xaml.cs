@@ -3,8 +3,10 @@ using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 using SharpGL.WPF;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TacticsGame
 {
@@ -19,12 +21,12 @@ namespace TacticsGame
         //        new(_path + "\\hero1.jpg", 70),
         //        new(_path + "\\hero2.jpg", 1000)};
         private List<UnitCard> _units = new List<UnitCard>{
-                new ("Unit 1", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u001.jpg", 75, 100),
-                new ("Unit 2", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u002.jpg", 80, 100),
-                new ("Unit 3", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u003.jpg", 45, 100),
-                new ("Unit 4", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u004.jpg", 14, 100),
-                new ("Unit 5", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u005.jpg", 98, 100),
-                new ("Unit 6", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\u006.jpg", 100, 100)};
+                new ("Unit 1", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 75, 100),
+                new ("Unit 2", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 80, 100),
+                new ("Unit 3", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 45, 100),
+                new ("Unit 4", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 14, 100),
+                new ("Unit 5", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 98, 100),
+                new ("Unit 6", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 100, 100)};
         private int _round = 1;
         private int _info = 0;
 
@@ -38,6 +40,9 @@ namespace TacticsGame
             string[] imagesPath = Directory.GetFiles(_path);
 
             //var linkedListUnits = new LinkedList<Unit>(_units);
+            unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.4 });
+            unitsList.SetBinding(StackPanel.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.4 });
+
             this.Loaded += FillInTheQueue;
             
 
