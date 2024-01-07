@@ -37,7 +37,8 @@ namespace TacticsGame
             InitializeComponent();
 
             string[] imagesPath = Directory.GetFiles(_path);
-
+            laserButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.1 });
+            laserButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
             unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.5 });
             
             this.Loaded += FillInTheQueue;

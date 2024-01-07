@@ -30,7 +30,7 @@
             </Grid.ColumnDefinitions>
             <!--<Grid.Background>
                 <ImageBrush
-                        ImageSource="C:\Programming\UNI_Projects\TacticsGame\TacticsGame\UIcons\CroppedPanel.png"
+                        ImageSource="UIcons/CroppedPanel.png"
                         Stretch="Uniform"/>
             </Grid.Background>-->
 			
@@ -43,6 +43,25 @@
                             Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Window}}"
 			>
             </StackPanel>
+        </Grid>
+        <Grid x:Name="bottomPanel" VerticalAlignment="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <Button x:Name="laserButton"
+                        Margin="0, 0, 0, 10"
+                        Background="#d1d1d1">
+                    <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame\UIcons\laser.png"
+                           Stretch="Uniform" 
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"></Image>
+                </Button>
+            </StackPanel>
+            
         </Grid>
     </Grid>
 </Window>
