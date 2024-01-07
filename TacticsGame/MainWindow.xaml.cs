@@ -66,7 +66,7 @@ namespace TacticsGame
         {
             var position = e.GetPosition(this);
 
-            var point = new PointF((float)position.X, (float)position.Y);
+            var point = new PointF((float)position.X, (float)(GlWindow.ActualHeight - position.Y));
 
             _positionProvider.TargetPosition = point;
         }
@@ -75,7 +75,7 @@ namespace TacticsGame
         {
             var position = e.GetPosition(this);
 
-            var point = new PointF((float)position.X, (float)position.Y);
+            var point = new PointF((float)position.X, (float)(GlWindow.ActualHeight - position.Y));
 
             _positionProvider.Position = point;
         }

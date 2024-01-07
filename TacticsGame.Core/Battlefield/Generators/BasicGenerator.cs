@@ -16,12 +16,12 @@ public class BasicGenerator : IBattlefieldGenerator
             for (var j = 0; j < tiles.GetLength(1); j++)
             {
                 tiles[i, j] = new Tile(
-                    new PointF(-5.5f + stepX * j + stepX / 2, -3f + stepY * i + stepY / 2),
+                    new PointF(-5f + stepX * j + stepX / 2, -3f + stepY * i + stepY / 2),
                     TileType.Field);
             }
         }
 
-        return new BattlefieldTiles(new SizeF(7f, 15f), tiles);
+        return new BattlefieldTiles(new SizeF(10f, 5.5f), tiles);
     }
 
     public BattlefieldTiles Generate()

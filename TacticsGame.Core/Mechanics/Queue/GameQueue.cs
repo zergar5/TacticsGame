@@ -17,4 +17,9 @@ public class GameQueue
 
         return nextUnit.Value;
     }
+
+    public int NextTurn()
+    {
+        return 0;
+    }
 }

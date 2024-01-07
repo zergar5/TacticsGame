@@ -15,6 +15,7 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
 {
     [EcsInject] private MouseTargetPositionHandler _positionHandler;
     [EcsInject] private readonly EntityBuilder _entityBuilder;
+    [EcsInject] private readonly Cartographer _cartographer;
 
     private EcsFilter _battlefieldFilter;
     private EcsFilter _currentUnitFilter;
@@ -47,6 +48,11 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
             _battlefieldTiles = battlefieldComponent.Map;
         }
 
+        foreach (var currentUnit in _currentUnitFilter)
+        {
+            _position = _transforms.Get(currentUnit).Location;
+        }
+
         _aStar = new AStar(_battlefieldTiles);
     }
 
@@ -54,16 +60,17 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var currentUnit in _currentUnitFilter)
         {
-            if (_movements.Get(currentUnit).IsMoving)
-            {
-                _position = _positionHandler.GetPosition();
-            }
+            if (!_movements.Get(currentUnit).IsMoving) continue;
+
+            _position = _positionHandler.GetPosition();
 
             var position = _transforms.Get(currentUnit).Location;
 
-            var (row, column) = FindIndex(position);
+            var (row, column) = _cartographer.FindIndex(position);
 
-            var (targetRow, targetColumn) = FindIndex(_position);
+            var (targetRow, targetColumn) = _cartographer.FindIndex(_position);
+
+            if (targetRow == -1 || targetColumn == -1) continue;
 
             var path = _aStar.FindPath(row, column, targetRow, targetColumn);
 
@@ -76,19 +83,5 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
                 _entityBuilder.Set(currentUnit, new PathComponent(path));
             }
         }
-    }
-
-    //Скорее всего вынести в отдельную систему или класс
-    public (int, int) FindIndex(PointF location)
-    {
-        for (var i = 0; i < _battlefieldTiles.CountRows; i++)
-        {
-            for (var j = 0; j < _battlefieldTiles.CountColumns; j++)
-            {
-                if (_battlefieldTiles[i, j].Location == location) return (i, j);
-            }
-        }
-
-        return (0, 0);
     }
 }

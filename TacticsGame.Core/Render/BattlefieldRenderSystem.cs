@@ -67,7 +67,7 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
 
         _gl.Disable(OpenGL.GL_TEXTURE_2D);
 
-        RenderReachableTiles();
+        //RenderReachableTiles();
         RenderBattlefield();
     }
 

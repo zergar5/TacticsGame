@@ -20,8 +20,12 @@ namespace TacticsGame.Core;
 public class Game
 {
     private readonly EcsWorld _world;
-
     private readonly EntityBuilder _entityBuilder;
+
+    private readonly IBattlefieldGenerator _battlefieldGenerator;
+    private readonly Cartographer _cartographer;
+    private readonly MousePositionProvider _positionProvider;
+    private readonly CoordinatesConverter _coordinatesConverter;
 
     private readonly EcsSystems _setupSystems;
     private readonly EcsSystems _gameplaySystems;
@@ -39,24 +43,31 @@ public class Game
         _world = new EcsWorld();
         _entityBuilder = new EntityBuilder(_world);
 
+        _battlefieldGenerator = battlefieldGenerator;
+        _positionProvider = positionProvider;
+        _coordinatesConverter = coordinatesConverter;
+
         _setupSystems = new EcsSystems(_world);
         _setupSystems
             .Add(new InitBattlefieldSystem())
             .Add(new UnitSpawnerSystem())
-            .Inject(_entityBuilder, battlefieldGenerator)
+            .Inject(_entityBuilder, _battlefieldGenerator)
             .Init();
+
+        _cartographer = new Cartographer(_world);
 
         _gameplaySystems = new EcsSystems(_world);
         _gameplaySystems
             .Add(new GameQueueSystem())
-            .Inject(_entityBuilder, battlefieldGenerator)
+            .Inject(_entityBuilder, _battlefieldGenerator)
             .Init();
 
         _movementSystems = new EcsSystems(_world);
         _movementSystems
             .Add(new ReachableTilesFindingSystem())
             .Add(new PathfindingSystem())
-            .Inject(new MouseTargetPositionHandler(positionProvider, coordinatesConverter), _entityBuilder)
+            .Inject(new MouseTargetPositionHandler(_positionProvider, _coordinatesConverter), _entityBuilder)
+            .Inject(_cartographer)
             .Init();
 
         _transformSystems = new EcsSystems(_world);
@@ -77,8 +88,8 @@ public class Game
 
     public void Update()
     {
-        _transformSystems.Run();
         _movementSystems.Run();
+        _transformSystems.Run();
     }
 
     public void Render()

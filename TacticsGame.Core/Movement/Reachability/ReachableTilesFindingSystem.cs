@@ -10,6 +10,7 @@ namespace TacticsGame.Core.Movement.Reachability;
 public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
 {
     [EcsInject] private readonly EntityBuilder _entityBuilder;
+    [EcsInject] private readonly Cartographer _cartographer;
 
     private EcsFilter _battlefieldFilter;
     private EcsFilter _currentUnitFilter;
@@ -46,11 +47,11 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var currentUnit in _currentUnitFilter)
         {
+            if (!_movements.Get(currentUnit).IsMoving) continue;
+
             var position = _transforms.Get(currentUnit).Location;
 
-            var (row, column) = FindIndex(position);
-
-            _movements.Get(currentUnit).IsMoving = true;
+            var (row, column) = _cartographer.FindIndex(position);
 
             var reachableTiles =
                 _bfs.FindReachableTiles(row, column, _movements.Get(currentUnit).RemainingMovement);
@@ -64,19 +65,5 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
                 _entityBuilder.Set(currentUnit, new ReachableTilesComponent(reachableTiles));
             }
         }
-    }
-
-    //Скорее всего вынести в отдельную систему или класс
-    public (int, int) FindIndex(PointF location)
-    {
-        for (var i = 0; i < _battlefieldTiles.CountRows; i++)
-        {
-            for (var j = 0; j < _battlefieldTiles.CountColumns; j++)
-            {
-                if (_battlefieldTiles[i, j].Location == location) return (i, j);
-            }
-        }
-
-        return (0, 0);
     }
 }

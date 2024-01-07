@@ -30,30 +30,39 @@ public class TransformSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var currentUnit in _currentUnitFilter)
         {
-            ref var movementComponent = ref _movements.Get(currentUnit);
-
-            if (!movementComponent.IsMoving) continue;
-
-            var remainingMovement = movementComponent.RemainingMovement;
-            ref var currentUnitLocationComponent = ref _locations.Get(currentUnit);
-
-            ref var pathComponent = ref _path.Get(currentUnit);
-            var path = pathComponent.Path;
-
-            if (path.Count > remainingMovement)
-            {
-                currentUnitLocationComponent.Location = path[remainingMovement].Location;
-                pathComponent.Path.RemoveRange(0, remainingMovement);
-            }
-            else
-            {
-                movementComponent.RemainingMovement -= path.Count - 1;
-
-                currentUnitLocationComponent.Location = path[^1].Location;
-                pathComponent.Path.Clear();
-            }
-
-            if (movementComponent.RemainingMovement == 0) movementComponent.IsMoving = false;
+            Moving(currentUnit);
         }
+    }
+
+    private void Moving(int currentUnit)
+    {
+        ref var movementComponent = ref _movements.Get(currentUnit);
+
+        if (!movementComponent.IsMoving) return;
+
+        var remainingMovement = movementComponent.RemainingMovement;
+
+        //Потом убрать
+        if (remainingMovement == 0) return;
+
+        ref var currentUnitLocationComponent = ref _locations.Get(currentUnit);
+
+        ref var pathComponent = ref _path.Get(currentUnit);
+        var path = pathComponent.Path;
+
+        if (path.Count > remainingMovement)
+        {
+            currentUnitLocationComponent.Location = path[remainingMovement].Location;
+            pathComponent.Path.Clear();
+        }
+        else
+        {
+            movementComponent.RemainingMovement -= path.Count - 1;
+
+            currentUnitLocationComponent.Location = path[^1].Location;
+            pathComponent.Path.Clear();
+        }
+
+        if (movementComponent.RemainingMovement == 0) movementComponent.IsMoving = false;
     }
 }
