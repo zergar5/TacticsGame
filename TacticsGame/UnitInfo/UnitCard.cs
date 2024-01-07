@@ -42,8 +42,6 @@ namespace TacticsGame
             var image = new Image();
             image.Source = new BitmapImage(new Uri(ImagePath, UriKind.Absolute));
             image.Stretch = Stretch.Uniform;
-            //image.MaxWidth = double.PositiveInfinity;
-            //image.MaxHeight = double.PositiveInfinity;
             image.SetBinding(Image.WidthProperty, new Binding("ActualWidth") { Source = border});
 
             border.SetBinding(Border.HeightProperty, new Binding("ActualHeight") { Source = image, Converter = new PercentConverter(), ConverterParameter = 1.2 });
@@ -51,8 +49,7 @@ namespace TacticsGame
             Grid.SetRow(image, 0);
 
             var healthPoints = new ProgressBar();
-            //healthPoints.Value = (double)Health / MaxHealth;
-            healthPoints.Value = Health;
+            healthPoints.Value = (double)Health / MaxHealth * 100;
             healthPoints.MinHeight = 10;
             healthPoints.Height = border.Height - image.Height;
             //healthPoints.SetBinding(ProgressBar.WidthProperty, new Binding("ActualWidth") { Source = border });

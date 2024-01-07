@@ -23,7 +23,7 @@ namespace TacticsGame
         private List<UnitCard> _units = new List<UnitCard>{
                 new ("Unit 1", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 75, 100),
                 new ("Unit 2", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 80, 100),
-                new ("Unit 3", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 45, 100),
+                new ("Unit 3", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 45, 45),
                 new ("Unit 4", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 14, 100),
                 new ("Unit 5", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 98, 100),
                 new ("Unit 6", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 100, 100)};
