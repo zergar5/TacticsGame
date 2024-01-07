@@ -27,7 +27,7 @@ namespace TacticsGame
                 new ("Unit 4", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 14, 100),
                 new ("Unit 5", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 98, 100),
                 new ("Unit 6", "C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\minU010.jpg", 100, 100)};
-        private int _round = 1;
+        private RoundCard _round = new("C:\\Programming\\UNI_Projects\\TacticsGame\\TacticsGame\\UIcons\\newR.png");
         private int _info = 0;
         private bool isResizing = false;
 
@@ -35,17 +35,13 @@ namespace TacticsGame
         public MainWindow()
         {
             InitializeComponent();
-            //var units = new List<Image>();
-            //unitsList.ItemsSource = units;
 
             string[] imagesPath = Directory.GetFiles(_path);
 
-            //var linkedListUnits = new LinkedList<Unit>(_units);
             unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.5 });
-            //unitsList.SetBinding(StackPanel.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.1 });
-
+            panelArea.SetBinding(Grid.WidthProperty, new Binding("ActualWidth") { Source = unitsList, Converter = new PercentConverter(), ConverterParameter = 2 });
             this.Loaded += FillInTheQueue;
-            
+
 
         }
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -75,9 +71,11 @@ namespace TacticsGame
 
             while (unitsList.Children.Count < 10)
             {
-                if (_round != 1 && _info == 6)
+                if (_info == 6)
                 {
-                    AddRoundCard(unitsList);
+                    var roundCard = _round.CreateRoundBorder();
+                    roundCard.Unloaded += FillInTheQueue;
+                    unitsList.Children.Add(roundCard);
                     _info = 0;
                 }
 
@@ -103,31 +101,16 @@ namespace TacticsGame
 
                 _units.RemoveAt(0);
                 _units.Add(unit);
-                if (_info == 6)
-                {
-                    _round++;
-                }
+                //if (_info == 6)
+                //{
+                //    _round++;
+                //}
             }
 
 
 
         }
-        private void AddRoundCard(StackPanel unitsList)
-        {
-            var roundCard = new StackPanel();
-
-            var roundText = new TextBlock()
-            {
-                Height = 95,
-                Width = 50,
-                FontSize = 16,
-                Text = _round.ToString(),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            roundCard.Children.Add(roundText);
-            unitsList.Children.Add(roundCard);
-        }
+        
         //private void AddUnitImage(Unit unit, StackPanel group)
         //{
         //    Image img = new Image();

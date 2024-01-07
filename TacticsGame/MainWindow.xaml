@@ -30,7 +30,7 @@
             </Grid.ColumnDefinitions>
             <Grid.Background>
                 <ImageBrush
-                        ImageSource="C:\Текстуры для игры\Panel1.png"
+                        ImageSource="C:\Programming\UNI_Projects\TacticsGame\TacticsGame\UIcons\CroppedPanel.png"
                         Stretch="Uniform"/>
             </Grid.Background>
 			
@@ -40,7 +40,6 @@
                             Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                     Background="BlueViolet" 
                             Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Window}}"
 			>
             </StackPanel>
