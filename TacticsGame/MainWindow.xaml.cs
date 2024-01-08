@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using SharpGL.WPF;
+using TacticsGame.Converters;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace TacticsGame
@@ -43,7 +44,7 @@ namespace TacticsGame
             passButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
             passButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
             unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.5 });
-            
+
             Loaded += FillInTheQueue;
 
 

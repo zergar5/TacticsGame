@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace TacticsGame
+namespace TacticsGame.Converters
 {
     public class PercentConverter : IValueConverter
     {

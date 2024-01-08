@@ -6,6 +6,10 @@ using System.Windows;
 using System.Windows.Data;
 using System.Xml.Linq;
 using System.Xml;
+using TacticsGame.Converters;
+using SharpGL.SceneGraph.Primitives;
+using System.Windows.Input;
+using Grid = System.Windows.Controls.Grid;
 
 namespace TacticsGame
 {
@@ -35,16 +39,25 @@ namespace TacticsGame
             var image = new Image();
             image.Source = new BitmapImage(new Uri(ImagePath, UriKind.Absolute));
             image.Stretch = Stretch.Uniform;
-            image.SetBinding(Image.WidthProperty, new Binding("ActualWidth") { Source = border });
+            image.SetBinding(FrameworkElement.WidthProperty, new Binding("ActualWidth") { Source = border });
 
-            border.SetBinding(Border.HeightProperty, new Binding("ActualHeight") { Source = image, Converter = new PercentConverter(), ConverterParameter = 1.2 });
+            border.SetBinding(FrameworkElement.HeightProperty, new Binding("ActualHeight") { Source = image, Converter = new PercentConverter(), ConverterParameter = 1.2 });
 
             Grid.SetRow(image, 0);
             
             var roundText = new TextBlock();
-            roundText.Text = "Round " + round.ToString();
+            roundText.Text = "ROUND " + round.ToString();
             roundText.Foreground = Brushes.White;
-            roundText.MinHeight = 10;
+            roundText.TextAlignment = TextAlignment.Center;
+            roundText.SetBinding(TextBlock.FontSizeProperty, new MultiBinding
+            {
+                Converter = new TextConverter(),
+                Bindings = {
+                new Binding("ActualHeight") { Source = border },
+                new Binding("ActualWidth") { Source = border }
+            }
+            });
+            //roundText.MinHeight = 10;
             roundText.Height = border.Height - image.Height;
             roundText.Background = new SolidColorBrush(Color.FromRgb(0x24, 0x1e, 0x29));
             Grid.SetRow(roundText, 1);
