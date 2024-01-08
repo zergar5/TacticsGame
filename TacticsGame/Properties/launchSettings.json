@@ -2,9 +2,7 @@
   "profiles": {
     "TacticsGame": {
       "commandName": "Project",
-
-      "workingDirectory": "..\\TacticsGame.Core\\"
-
+      "workingDirectory": "..\\"
     }
   }
 }

@@ -26,7 +26,7 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
 
 
 
-        var textureImage = new Bitmap(@"..\TacticsGame.Core\Textures\Map\bf1.jpg");
+        var textureImage = new Bitmap(@$"{Directory.GetCurrentDirectory()}\TacticsGame.Core\Assets\Textures\Map\bf1.jpg");
 
         _texture.Create(_gl, textureImage);
 
