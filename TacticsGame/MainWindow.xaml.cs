@@ -89,7 +89,7 @@ public partial class MainWindow : Window
                     foreach (var unit in _units)
                     {
 
-                        var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder();
+                        var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder(_unitsCards.Find(x => x.Id.Equals(unit)).GetId());
                         unitsList.Children.Add(unitCard);
 
                         _info++;
@@ -101,6 +101,46 @@ public partial class MainWindow : Window
                     }
 
                 }
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                var id = e.OldItems[0];
+                var panelChildren = unitsList.Children;
+                for (var i = 0; i < panelChildren.Count; i++)
+                {
+                    var child = (Border)unitsList.Children[i];
+                    if (child.Name != "Unit" + id.ToString())
+                    {
+                        continue;
+                    }
+                    unitsList.Children.Remove(child); // удаляем найденный элемент
+                    i--; // уменьшаем индекс, чтобы не пропустить следующий элемент
+                }
+                while (unitsList.Children.Count < 10)
+                {
+                    if (_info >= _units.Count)
+                    {
+                        var roundCard = _round.CreateRoundBorder(_roundNumber);
+                        unitsList.Children.Add(roundCard);
+                        _info = 0;
+                    }
+                    foreach (var unit in _units)
+                    {
+
+                        var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder(_unitsCards.Find(x => x.Id.Equals(unit)).GetId());
+                        unitsList.Children.Add(unitCard);
+
+                        _info++;
+
+                    }
+                    if (_info == _units.Count)
+                    {
+                        _roundNumber++;
+                    }
+
+                }
+                break;
+            case NotifyCollectionChangedAction.Move:
+
                 break;
         }
         
@@ -148,7 +188,7 @@ public partial class MainWindow : Window
             var unit = _unitsCards[0];
 
              
-            var unitCard = unit.CreateBorder();
+            var unitCard = unit.CreateBorder(unit.GetId());
             unitCard.Unloaded += FillInTheQueue;
             unitsList.Children.Add(unitCard);
             

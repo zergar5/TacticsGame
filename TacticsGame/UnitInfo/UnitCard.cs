@@ -86,11 +86,17 @@ namespace TacticsGame
             MaxHealth = maxHealth;
         }
 
-        public Border CreateBorder()
+        public string GetId()
+        {
+            return Id.ToString();
+        }
+
+        public Border CreateBorder(string id)
         {
             var border = new Border();
             border.BorderThickness = new Thickness(1);
             border.BorderBrush = Brushes.Black;
+            border.Name = "Unit" + id;
             //border.Margin = new Thickness(10);
             //border.Padding = new Thickness(5);
             //StackPanel stackPanel = (StackPanel)Application.Current.MainWindow.FindName("unitsList");
