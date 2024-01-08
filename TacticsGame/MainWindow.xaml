@@ -56,7 +56,7 @@
                         Padding="2"
                         Margin="0, 0, 0, 10"
                         Background="#d1d1d1">
-                                <Image Source="/UIcons\gun.png"
+                    <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame.Core\Assets\Icons\Units\bolter.png"
                        Stretch="Uniform" 
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"></Image>
@@ -65,7 +65,7 @@
                         Padding="2"
                         Margin="0, 0, 0, 10"
                         Background="#d1d1d1">
-                    <Image Source="/UIcons\laser.png"
+                    <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame.Core\Assets\Icons\Units\gauss flayer.png"
                            Stretch="Uniform" 
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"></Image>
@@ -75,7 +75,7 @@
                         Margin="0, 0, 0, 10"
                         Background="#d1d1d1"
                         Click="PassButton_OnClick">
-                                    <Image Source="/UIcons\pass.png"
+                    <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame.Core\Assets\Icons\UI\pass.png"
                            Stretch="Uniform" 
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center">

@@ -73,14 +73,14 @@ namespace TacticsGame
 
     public class UnitCard
     {
-        public string Name { get; set; }
+        public int Id { get; set; }
         public string ImagePath { get; set; }
         public int Health { get; set; }
         public int MaxHealth { get; set; }
 
-        public UnitCard(string name, string imagePath, int health, int maxHealth)
+        public UnitCard(int id, string imagePath, int health, int maxHealth)
         {
-            Name = name;
+            Id = id;
             ImagePath = imagePath;
             Health = health;
             MaxHealth = maxHealth;

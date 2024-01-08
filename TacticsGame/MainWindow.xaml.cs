@@ -18,6 +18,7 @@ using TacticsGame.Core.Battlefield.Generators;
 using TacticsGame.Core.Converters;
 using TacticsGame.Core.Mechanics.Queue;
 using TacticsGame.Core.Providers;
+using System.Collections.Specialized;
 
 namespace TacticsGame;
 
@@ -32,15 +33,15 @@ public partial class MainWindow : Window
     //        new(_path + "\\hero1.jpg", 70),
     //        new(_path + "\\hero2.jpg", 1000)};
     private List<UnitCard> _unitsCards = new List<UnitCard>{
-        new ("Unit 1", $"{_path}u001.jpg", 75, 100),
-        new ("Unit 2", $"{_path}u002.jpg", 80, 100),
-        new ("Unit 3", $"{_path}u013.jpg", 45, 45),
-        new ("Unit 4", $"{_path}u014.jpg", 14, 100) };
+        new (1, $"{_path}u001.jpg", 100, 100),
+        new (2, $"{_path}u013.jpg", 80, 80) };
+        //new ("Unit 3", $"{_path}u013.jpg", 45, 45),
+        //new ("Unit 4", $"{_path}u014.jpg", 14, 100) };
     private int _roundNumber = 1;
     private RoundCard _round = new(@$"{Directory.GetCurrentDirectory()}\TacticsGame.Core\Assets\Icons\UI\skull.png");
     private int _info = 0;
-    private int _unitsNumber = 4;
     private bool isResizing = false;
+    private int _unitsNumber = 0; 
 
     private Game _game;
     private OpenGL _gl;
@@ -62,10 +63,47 @@ public partial class MainWindow : Window
         passButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
         unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.5 });
 
-        Loaded += FillInTheQueue;
 
+        //Loaded += FillInTheQueue;
+
+        _units.CollectionChanged += Fill;
 
     }
+
+    private void Fill(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (_unitsNumber < _units.Count)
+        {
+            unitsList.Children.Clear();
+            _roundNumber = 1;
+            while (unitsList.Children.Count < 10)
+            {
+                if (_roundNumber != 1 && _info == _units.Count)
+                {
+                    var roundCard = _round.CreateRoundBorder(_roundNumber);
+                    unitsList.Children.Add(roundCard);
+                    _info = 0;
+                }
+                foreach (var unit in _units)
+                {
+
+                    var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder();
+                    unitsList.Children.Add(unitCard);
+
+                    _info++;
+
+                }
+                if (_info == _units.Count)
+                {
+                    _roundNumber++;
+                }
+
+            }
+            _unitsNumber = _units.Count;
+        }              
+
+    }
+
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (!isResizing)
@@ -88,12 +126,13 @@ public partial class MainWindow : Window
             isResizing = false;
         }
     }
+    
     private void FillInTheQueue(object sender, RoutedEventArgs e)
     {
 
         while (unitsList.Children.Count < 10)
         {
-            if (_roundNumber != 1 && _info == _unitsNumber)
+            if (_roundNumber != 1 && _info == _units.Count)
             {
                 var roundCard = _round.CreateRoundBorder(_roundNumber);
                 roundCard.Unloaded += FillInTheQueue;
@@ -101,29 +140,21 @@ public partial class MainWindow : Window
                 _info = 0;
             }
 
-            StackPanel group;
 
             var unit = _unitsCards[0];
 
-            group = new StackPanel()
-            {
-                Orientation = Orientation.Vertical
-            };
              
             var unitCard = unit.CreateBorder();
             unitCard.Unloaded += FillInTheQueue;
             unitsList.Children.Add(unitCard);
-
-            //AddUnitImage(unit, group);
-            //AddHealthBar(group);
+            
             //group.MouseLeftButtonUp += Remove_Card;
-            //unitsList.Children.Add(group);
 
             _info++;
 
             _unitsCards.RemoveAt(0);
             _unitsCards.Add(unit);
-            if (_info == _unitsNumber)
+            if (_info == _units.Count)
             {
                 _roundNumber++;
             }
@@ -132,7 +163,7 @@ public partial class MainWindow : Window
 
 
     }
-        
+
     //private void AddUnitImage(Unit unit, StackPanel group)
     //{
     //    Image img = new Image();
@@ -173,14 +204,12 @@ public partial class MainWindow : Window
     //}
     private void Remove_Card(object sender, RoutedEventArgs e)
     {
-        unitsList.Children.Remove((StackPanel)sender);
-        var firstCard = (StackPanel)unitsList.Children[0];
-        var secondCard = (StackPanel)unitsList.Children[1];
-        if (firstCard.Children.Count == 1 && secondCard.Children.Count == 1)
+        unitsList.Children.Remove((Border)sender); var firstCard = (Border)unitsList.Children[0];
+        var secondCard = (Border)unitsList.Children[1];
+        if (((Grid)firstCard.Child).Children[1] is TextBlock && ((Grid)secondCard.Child).Children[1] is TextBlock)
         {
             unitsList.Children.Remove(firstCard);
         }
-
     }
 
     //static void OnCollectionChanged(object sender,
