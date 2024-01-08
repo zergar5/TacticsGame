@@ -45,6 +45,7 @@ namespace TacticsGame
         private void Tick(object sender, EventArgs e)
         {
             _game.Update();
+            _unitStateProvider.IsMoving = false;
             _game.Render();
         }
 
@@ -59,7 +60,7 @@ namespace TacticsGame
                     _positionProvider,
                     _unitStateProvider,
                     new CoordinatesConverter(GlWindow.OpenGL),
-                    new GameQueue(_units)
+                    _units
                 );
 
             _gl = args.OpenGL;

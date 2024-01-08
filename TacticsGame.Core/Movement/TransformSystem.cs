@@ -43,15 +43,18 @@ public class TransformSystem : IEcsInitSystem, IEcsRunSystem
 
         ref var currentUnitLocationComponent = ref _locations.Get(currentUnit);
 
-        ref var pathComponent = ref _path.Get(currentUnit);
-        var path = pathComponent.Path;
-
-        if (path.Count - 1 <= remainingMovement)
+        if (_path.Has(currentUnit))
         {
-            movementComponent.RemainingMovement -= path.Count - 1;
+            ref var pathComponent = ref _path.Get(currentUnit);
+            var path = pathComponent.Path;
 
-            currentUnitLocationComponent.Location = path[^1].Location;
-            pathComponent.Path.Clear();
+            if (path.Count - 1 <= remainingMovement && path.Count > 1)
+            {
+                movementComponent.RemainingMovement -= path.Count - 1;
+
+                currentUnitLocationComponent.Location = path[^1].Location;
+                pathComponent.Path.Clear();
+            }
         }
         //else
         //{

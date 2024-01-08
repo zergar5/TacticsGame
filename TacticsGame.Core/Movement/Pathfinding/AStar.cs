@@ -25,11 +25,10 @@ public class AStar
 
     public List<Tile> FindPath(int startRow, int startColumn, int targetRow, int targetColumn)
     {
-        _path.Clear();
         _openSet.Clear();
         _closedSet.Clear();
         _cameFrom.Clear();
-        _path.Clear();
+        _pathCost.Clear();
 
         _pathCost[(startRow, startColumn)] = 0;
 
@@ -57,7 +56,7 @@ public class AStar
                     _cameFrom[neighbor] = currentTile;
                     _pathCost[neighbor] = currentCost;
                     var heuristicCost = currentCost +
-                                        HeuristicCostEstimate(neighbor.Item1, neighbor.Item2,
+                                        HeuristicCostEstimate(neighbor.row, neighbor.column,
                                             targetRow, targetColumn);
 
                     if (_openSet.UnorderedItems.All(n => n.Element != neighbor))
@@ -73,7 +72,7 @@ public class AStar
         return _path;
     }
 
-    private List<(int, int)> GetNeighbors(int row, int column)
+    private List<(int row, int column)> GetNeighbors(int row, int column)
     {
         _neighbors.Clear();
 
@@ -105,7 +104,7 @@ public class AStar
         return Math.Abs(startRow - targetRow) + Math.Abs(startColumn - targetColumn);
     }
 
-    private List<Tile> ReconstructPath(int targetRow, int targetColumn)
+    private void ReconstructPath(int targetRow, int targetColumn)
     {
         _path.Clear();
 
@@ -116,7 +115,5 @@ public class AStar
             (targetRow, targetColumn) = _cameFrom[(targetRow, targetColumn)];
             _path.Insert(0, _tiles[targetRow, targetColumn]);
         }
-
-        return _path;
     }
 }

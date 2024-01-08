@@ -5,6 +5,7 @@ using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
 using TacticsGame.Core.Handlers.UnitStateHandlers;
+using TacticsGame.Core.Movement.Reachability;
 using TacticsGame.Core.Scene;
 using TacticsGame.Core.Units;
 
@@ -13,7 +14,6 @@ namespace TacticsGame.Core.Movement.Pathfinding;
 public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
 {
     [EcsInject] private readonly MouseTargetPositionHandler _positionHandler;
-    [EcsInject] private readonly MovingStateHandler _stateHandler;
     [EcsInject] private readonly EntityBuilder _entityBuilder;
     [EcsInject] private readonly Cartographer _cartographer;
 
@@ -23,11 +23,11 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
     private EcsPool<BattlefieldComponent> _battlefields;
     private EcsPool<MovementComponent> _movements;
     private EcsPool<LocationComponent> _transforms;
+    private EcsPool<ReachableTilesComponent> _reachableTiles;
     private EcsPool<PathComponent> _paths;
 
     private BattlefieldTiles _battlefieldTiles;
     private AStar _aStar;
-    private PointF _position;
 
     public void Init(IEcsSystems systems)
     {
@@ -36,6 +36,7 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
         _battlefields = world.GetPool<BattlefieldComponent>();
         _movements = world.GetPool<MovementComponent>();
         _transforms = world.GetPool<LocationComponent>();
+        _reachableTiles = world.GetPool<ReachableTilesComponent>();
         _paths = world.GetPool<PathComponent>();
 
         _currentUnitFilter = world.Filter<CurrentUnitMarker>().Inc<UnitProfileComponent>().End();
@@ -48,11 +49,6 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
             _battlefieldTiles = battlefieldComponent.Map;
         }
 
-        foreach (var currentUnit in _currentUnitFilter)
-        {
-            _position = _transforms.Get(currentUnit).Location;
-        }
-
         _aStar = new AStar(_battlefieldTiles);
     }
 
@@ -60,19 +56,21 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var currentUnit in _currentUnitFilter)
         {
-            UpdateMovingState(currentUnit);
-
             if (!_movements.Get(currentUnit).IsMoving) continue;
 
-            _position = _positionHandler.GetPosition();
+            var targetPosition = _positionHandler.GetPosition();
 
             var position = _transforms.Get(currentUnit).Location;
 
             var (row, column) = _cartographer.FindIndex(position);
 
-            var (targetRow, targetColumn) = _cartographer.FindIndex(_position);
+            var (targetRow, targetColumn) = _cartographer.FindIndex(targetPosition);
 
-            if (targetRow == -1 || targetColumn == -1) continue;
+            if (targetRow == -1 && targetColumn == -1) continue;
+
+            var targetTile = _battlefieldTiles[targetRow, targetColumn];
+
+            if(!_reachableTiles.Get(currentUnit).ReachableTiles.Contains(targetTile)) continue;
 
             var path = _aStar.FindPath(row, column, targetRow, targetColumn);
 
@@ -85,10 +83,5 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
                 _entityBuilder.Set(currentUnit, new PathComponent(path));
             }
         }
-    }
-
-    private void UpdateMovingState(int currentUnit)
-    {
-        _movements.Get(currentUnit).IsMoving = _stateHandler.GetState();
     }
 }

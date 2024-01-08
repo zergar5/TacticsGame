@@ -1,4 +1,5 @@
-﻿using Leopotam.EcsLite;
+﻿using System.Collections.ObjectModel;
+using Leopotam.EcsLite;
 using SevenBoldPencil.EasyDi;
 using SharpGL;
 using TacticsGame.Core.Battlefield;
@@ -40,7 +41,7 @@ public class Game
         MousePositionProvider positionProvider,
         UnitStateProvider unitStateProvider,
         CoordinatesConverter coordinatesConverter,
-        GameQueue gameQueue
+        ObservableCollection<int> units
     )
     {
         _world = new EcsWorld();
@@ -62,7 +63,7 @@ public class Game
         _gameplaySystems = new EcsSystems(_world);
         _gameplaySystems
             .Add(new GameQueueSystem())
-            .Inject(gameQueue, _entityBuilder)
+            .Inject(new GameQueue(units), _entityBuilder, new MovingStateHandler(unitStateProvider))
             .Init();
 
         _movementSystems = new EcsSystems(_world);
@@ -70,7 +71,7 @@ public class Game
             .Add(new ReachableTilesFindingSystem())
             .Add(new PathfindingSystem())
             .Inject(new MouseTargetPositionHandler(_positionProvider, _coordinatesConverter), _entityBuilder)
-            .Inject(_cartographer, new MovingStateHandler(unitStateProvider))
+            .Inject(_cartographer)
             .Init();
 
         _transformSystems = new EcsSystems(_world);
