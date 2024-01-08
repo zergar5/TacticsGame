@@ -66,11 +66,11 @@ public partial class MainWindow : Window
 
         //Loaded += FillInTheQueue;
 
-        _units.CollectionChanged += Fill;
+        _units.CollectionChanged += Change;
 
     }
 
-    private void Fill(object? sender, NotifyCollectionChangedEventArgs e)
+    private void Change(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
