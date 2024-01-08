@@ -75,32 +75,32 @@ public partial class MainWindow : Window
         if (_unitsNumber < _units.Count)
         {
             unitsList.Children.Clear();
-            _roundNumber = 1;
-            while (unitsList.Children.Count < 10)
+            _roundNumber = 1;           
+            _unitsNumber = _units.Count;
+        }
+        while (unitsList.Children.Count < 10)
+        {
+            if (_roundNumber != 1 && _info == _units.Count)
             {
-                if (_roundNumber != 1 && _info == _units.Count)
-                {
-                    var roundCard = _round.CreateRoundBorder(_roundNumber);
-                    unitsList.Children.Add(roundCard);
-                    _info = 0;
-                }
-                foreach (var unit in _units)
-                {
+                var roundCard = _round.CreateRoundBorder(_roundNumber);
+                unitsList.Children.Add(roundCard);
+                _info = 0;
+            }
+            foreach (var unit in _units)
+            {
 
-                    var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder();
-                    unitsList.Children.Add(unitCard);
+                var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder();
+                unitsList.Children.Add(unitCard);
 
-                    _info++;
-
-                }
-                if (_info == _units.Count)
-                {
-                    _roundNumber++;
-                }
+                _info++;
 
             }
-            _unitsNumber = _units.Count;
-        }              
+            if (_info == _units.Count)
+            {
+                _roundNumber++;
+            }
+
+        }
 
     }
 
