@@ -72,35 +72,39 @@ public partial class MainWindow : Window
 
     private void Fill(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_unitsNumber < _units.Count)
+        switch (e.Action)
         {
-            unitsList.Children.Clear();
-            _roundNumber = 1;           
-            _unitsNumber = _units.Count;
-        }
-        while (unitsList.Children.Count < 10)
-        {
-            if (_roundNumber != 1 && _info == _units.Count)
-            {
-                var roundCard = _round.CreateRoundBorder(_roundNumber);
-                unitsList.Children.Add(roundCard);
+            case NotifyCollectionChangedAction.Add:
+                unitsList.Children.Clear();
+                _roundNumber = 1;
                 _info = 0;
-            }
-            foreach (var unit in _units)
-            {
+                while (unitsList.Children.Count < 10)
+                {
+                    if (_roundNumber != 1 && _info == _units.Count)
+                    {
+                        var roundCard = _round.CreateRoundBorder(_roundNumber);
+                        unitsList.Children.Add(roundCard);
+                        _info = 0;
+                    }
+                    foreach (var unit in _units)
+                    {
 
-                var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder();
-                unitsList.Children.Add(unitCard);
+                        var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder();
+                        unitsList.Children.Add(unitCard);
 
-                _info++;
+                        _info++;
 
-            }
-            if (_info == _units.Count)
-            {
-                _roundNumber++;
-            }
+                    }
+                    if (_info == _units.Count)
+                    {
+                        _roundNumber++;
+                    }
 
+                }
+                break;
         }
+        
+        
 
     }
 
