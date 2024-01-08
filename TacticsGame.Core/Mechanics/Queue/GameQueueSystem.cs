@@ -1,7 +1,7 @@
 ﻿using Leopotam.EcsLite;
 using SevenBoldPencil.EasyDi;
 using TacticsGame.Core.Context;
-using TacticsGame.Core.Handlers.UnitStateHandlers;
+using TacticsGame.Core.Handlers.StateHandlers;
 using TacticsGame.Core.Movement;
 using TacticsGame.Core.Movement.Pathfinding;
 using TacticsGame.Core.Movement.Reachability;
@@ -17,6 +17,7 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
 
     private EcsFilter _currentUnitFilter;
     private EcsFilter _unitsFilter;
+
     private EcsPool<CurrentUnitMarker> _currentUnitMarker;
     private EcsPool<UnitProfileComponent> _units;
     private EcsPool<MovementComponent> _movements;

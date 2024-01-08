@@ -4,7 +4,6 @@ using System.Drawing;
 using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
-using TacticsGame.Core.Handlers.UnitStateHandlers;
 using TacticsGame.Core.Movement.Reachability;
 using TacticsGame.Core.Scene;
 using TacticsGame.Core.Units;
@@ -62,9 +61,9 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
 
             var position = _transforms.Get(currentUnit).Location;
 
-            var (row, column) = _cartographer.FindIndex(position);
+            var (row, column) = _cartographer.FindTileIndex(position);
 
-            var (targetRow, targetColumn) = _cartographer.FindIndex(targetPosition);
+            var (targetRow, targetColumn) = _cartographer.FindTileIndex(targetPosition);
 
             if (targetRow == -1 && targetColumn == -1) continue;
 

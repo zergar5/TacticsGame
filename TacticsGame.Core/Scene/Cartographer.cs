@@ -1,12 +1,20 @@
 ﻿using Leopotam.EcsLite;
 using System.Drawing;
 using TacticsGame.Core.Battlefield;
+using TacticsGame.Core.Movement;
+using TacticsGame.Core.Units;
 
 namespace TacticsGame.Core.Scene;
 
 public class Cartographer
 {
     private readonly EcsWorld _world;
+
+    private readonly EcsFilter _currentUnit;
+    private readonly EcsFilter _unitsFilter;
+
+    private readonly EcsPool<UnitProfileComponent> _units;
+    private readonly EcsPool<LocationComponent> _locations;
 
     private readonly BattlefieldTiles _battlefieldTiles;
     private readonly SizeF _tileSize;
@@ -19,9 +27,13 @@ public class Cartographer
     {
         _world = world;
 
-        var battlefields = _world.GetPool<BattlefieldComponent>();
-
         var battlefieldFilter = _world.Filter<BattlefieldComponent>().End();
+        _currentUnit = _world.Filter<UnitProfileComponent>().Inc<CurrentUnitMarker>().End();
+        _unitsFilter = _world.Filter<UnitProfileComponent>().Exc<CurrentUnitMarker>().End();
+
+        var battlefields = _world.GetPool<BattlefieldComponent>();
+        _units = _world.GetPool<UnitProfileComponent>();
+        _locations = _world.GetPool<LocationComponent>();
 
         foreach (var battlefield in battlefieldFilter)
         {
@@ -37,7 +49,7 @@ public class Cartographer
         };
     }
 
-    public (int row, int column) FindIndex(PointF location)
+    public (int row, int column) FindTileIndex(PointF location)
     {
         var row = FindRow(location);
 
@@ -46,6 +58,42 @@ public class Cartographer
         var column = FindColumn(location, row);
 
         return column != -1 ? (row, column) : (-1, -1);
+    }
+
+    public List<Tile> FindUnitTiles(int range)
+    {
+        (int currentRow, int currentColumn) currentIndex = (0, 0);
+
+        foreach (var unit in _currentUnit)
+        {
+            currentIndex = FindTileIndex(_locations.Get(unit).Location);
+        }
+
+        var unitTiles = new List<Tile>();
+
+        foreach (var unit in _unitsFilter)
+        {
+            var tileIndex = FindTileIndex(_locations.Get(unit).Location);
+
+            var distance = CalculateDistanceInTiles(currentIndex, tileIndex);
+
+            if(distance > 1 && distance <= range) unitTiles.Add(_battlefieldTiles[tileIndex]);
+        }
+
+        return unitTiles;
+    }
+
+    public bool CheckTileForUnit(Tile tile)
+    {
+        return false;
+    }
+
+    public int FindUnitId(Tile tile)
+    {
+        foreach (var unit in _unitsFilter)
+        {
+            
+        }
     }
 
     private int FindRow(PointF location)
@@ -87,5 +135,10 @@ public class Cartographer
     {
         _rectangleLocation.X = tileLocation.X - _tileSize.Width / 2;
         _rectangleLocation.Y = tileLocation.Y - _tileSize.Height / 2;
+    }
+
+    private int CalculateDistanceInTiles((int currentRow, int currentColumn) currentTile, (int row, int column) tile)
+    {
+        return Math.Abs(tile.row - currentTile.currentRow) + Math.Abs(tile.column - currentTile.currentColumn);
     }
 }

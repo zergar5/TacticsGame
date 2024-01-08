@@ -18,6 +18,7 @@
                                MouseMove="GlWindow_OnMouseMove"
                                Grid.Column="0"
                                Grid.Row="0"
+                               DrawFPS="True"
         />
         <Grid x:Name="panelArea" VerticalAlignment="Top">
             <Grid.RowDefinitions>
@@ -74,7 +75,8 @@
                         Padding="2"
                         Margin="0, 0, 0, 10"
                         Background="#d1d1d1"
-                        Click="PassButton_OnClick">
+                        Click="PassButton_OnClick"
+                        >
                                     <Image Source="/UIcons\pass.png"
                            Stretch="Uniform" 
                            HorizontalAlignment="Center"

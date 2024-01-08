@@ -6,7 +6,6 @@ namespace TacticsGame.Core.Movement;
 
 public class TransformSystem : IEcsInitSystem, IEcsRunSystem
 {
-    private EcsFilter _battlefieldFilter;
     private EcsFilter _currentUnitFilter;
 
     private EcsPool<MovementComponent> _movements;
@@ -22,7 +21,6 @@ public class TransformSystem : IEcsInitSystem, IEcsRunSystem
         _path = world.GetPool<PathComponent>();
 
         _currentUnitFilter = world.Filter<CurrentUnitMarker>().Inc<UnitProfileComponent>().End();
-        //_battlefieldFilter = world.Filter<BattlefieldComponent>().End();
     }
 
     public void Run(IEcsSystems systems)
@@ -56,11 +54,6 @@ public class TransformSystem : IEcsInitSystem, IEcsRunSystem
                 pathComponent.Path.Clear();
             }
         }
-        //else
-        //{
-        //    currentUnitLocationComponent.Location = path[remainingMovement].Location;
-        //    pathComponent.Path.Clear();
-        //}
 
         if (movementComponent.RemainingMovement == 0) movementComponent.IsMoving = false;
     }

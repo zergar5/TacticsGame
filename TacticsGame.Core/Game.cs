@@ -7,7 +7,7 @@ using TacticsGame.Core.Battlefield.Generators;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Converters;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
-using TacticsGame.Core.Handlers.UnitStateHandlers;
+using TacticsGame.Core.Handlers.StateHandlers;
 using TacticsGame.Core.Mechanics.Queue;
 using TacticsGame.Core.Movement;
 using TacticsGame.Core.Movement.Pathfinding;
@@ -39,7 +39,7 @@ public class Game
     (
         IBattlefieldGenerator battlefieldGenerator,
         MousePositionProvider positionProvider,
-        UnitStateProvider unitStateProvider,
+        StateProvider unitStateProvider,
         CoordinatesConverter coordinatesConverter,
         ObservableCollection<int> units
     )

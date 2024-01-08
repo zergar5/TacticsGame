@@ -1,6 +1,6 @@
 ﻿namespace TacticsGame.Core.Providers;
 
-public class UnitStateProvider
+public class StateProvider
 {
     private bool _isMoving;
 
