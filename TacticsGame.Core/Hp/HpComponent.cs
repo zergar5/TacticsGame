@@ -1,13 +1,13 @@
 ﻿namespace TacticsGame.Core.Hp;
 
-public struct HpComponent
+public struct HPComponent
 {
     public int Wounds { get; set; }
     public int RemainingWounds { get; set; }
 
-    public HpComponent(int wounds, int remainingWounds)
+    public HPComponent(int wounds)
     {
         Wounds = wounds;
-        RemainingWounds = remainingWounds;
+        RemainingWounds = wounds;
     }
 }

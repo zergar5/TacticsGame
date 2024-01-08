@@ -40,7 +40,7 @@ public class BFS
             {
                 if (_visitedTiles.Contains(neighbor)) continue;
 
-                _queue.Enqueue((neighbor.Item1, neighbor.Item2, traveledDistance + 1));
+                _queue.Enqueue((neighbor.row, neighbor.column, traveledDistance + 1));
 
                 _visitedTiles.Add(neighbor);
             }
@@ -49,7 +49,7 @@ public class BFS
         return _reachableTiles;
     }
 
-    private List<(int, int)> GetNeighbors(int row, int column)
+    private List<(int row, int column)> GetNeighbors(int row, int column)
     {
         _neighbors.Clear();
 

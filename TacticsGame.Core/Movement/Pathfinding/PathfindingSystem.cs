@@ -1,19 +1,19 @@
 ﻿using Leopotam.EcsLite;
 using SevenBoldPencil.EasyDi;
-using System.ComponentModel;
 using System.Drawing;
 using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Context;
-using TacticsGame.Core.Handlers;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
-using TacticsGame.Core.Providers;
+using TacticsGame.Core.Handlers.UnitStateHandlers;
+using TacticsGame.Core.Scene;
 using TacticsGame.Core.Units;
 
 namespace TacticsGame.Core.Movement.Pathfinding;
 
 public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
 {
-    [EcsInject] private MouseTargetPositionHandler _positionHandler;
+    [EcsInject] private readonly MouseTargetPositionHandler _positionHandler;
+    [EcsInject] private readonly MovingStateHandler _stateHandler;
     [EcsInject] private readonly EntityBuilder _entityBuilder;
     [EcsInject] private readonly Cartographer _cartographer;
 
@@ -60,6 +60,8 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var currentUnit in _currentUnitFilter)
         {
+            UpdateMovingState(currentUnit);
+
             if (!_movements.Get(currentUnit).IsMoving) continue;
 
             _position = _positionHandler.GetPosition();
@@ -83,5 +85,10 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
                 _entityBuilder.Set(currentUnit, new PathComponent(path));
             }
         }
+    }
+
+    private void UpdateMovingState(int currentUnit)
+    {
+        _movements.Get(currentUnit).IsMoving = _stateHandler.GetState();
     }
 }

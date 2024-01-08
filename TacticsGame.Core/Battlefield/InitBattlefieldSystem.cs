@@ -3,7 +3,6 @@ using SevenBoldPencil.EasyDi;
 using System.Drawing;
 using TacticsGame.Core.Battlefield.Generators;
 using TacticsGame.Core.Context;
-using TacticsGame.Core.Render;
 
 namespace TacticsGame.Core.Battlefield;
 
@@ -26,7 +25,6 @@ public class InitBattlefieldSystem : IEcsInitSystem
         _entityBuilder
             .Init()
             .Set(battlefieldComponent)
-            .Set(new RenderComponent(RenderingType.Battlefield))
             .Build();
     }
 }

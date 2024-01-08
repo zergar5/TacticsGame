@@ -5,14 +5,15 @@ using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Battlefield.Generators;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Converters;
-using TacticsGame.Core.Handlers;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
+using TacticsGame.Core.Handlers.UnitStateHandlers;
 using TacticsGame.Core.Mechanics.Queue;
 using TacticsGame.Core.Movement;
 using TacticsGame.Core.Movement.Pathfinding;
 using TacticsGame.Core.Movement.Reachability;
 using TacticsGame.Core.Providers;
 using TacticsGame.Core.Render;
+using TacticsGame.Core.Scene;
 using TacticsGame.Core.Units;
 
 namespace TacticsGame.Core;
@@ -35,9 +36,11 @@ public class Game
 
     public Game
     (
-        IBattlefieldGenerator battlefieldGenerator, 
-        MousePositionProvider positionProvider, 
-        CoordinatesConverter coordinatesConverter
+        IBattlefieldGenerator battlefieldGenerator,
+        MousePositionProvider positionProvider,
+        UnitStateProvider unitStateProvider,
+        CoordinatesConverter coordinatesConverter,
+        GameQueue gameQueue
     )
     {
         _world = new EcsWorld();
@@ -59,7 +62,7 @@ public class Game
         _gameplaySystems = new EcsSystems(_world);
         _gameplaySystems
             .Add(new GameQueueSystem())
-            .Inject(_entityBuilder, _battlefieldGenerator)
+            .Inject(gameQueue, _entityBuilder)
             .Init();
 
         _movementSystems = new EcsSystems(_world);
@@ -67,7 +70,7 @@ public class Game
             .Add(new ReachableTilesFindingSystem())
             .Add(new PathfindingSystem())
             .Inject(new MouseTargetPositionHandler(_positionProvider, _coordinatesConverter), _entityBuilder)
-            .Inject(_cartographer)
+            .Inject(_cartographer, new MovingStateHandler(unitStateProvider))
             .Init();
 
         _transformSystems = new EcsSystems(_world);
@@ -80,14 +83,17 @@ public class Game
     {
         _renderSystems = new EcsSystems(_world);
         _renderSystems
+            .Add(new InitRenderSystem())
             .Add(new BattlefieldRenderSystem())
+            .Add(new UIRenderSystem())
             .Add(new UnitsRenderSystem())
-            .Inject(gl)
+            .Inject(gl, _cartographer, new MousePositionHandler(_positionProvider, _coordinatesConverter))
             .Init();
     }
 
     public void Update()
     {
+        _gameplaySystems.Run();
         _movementSystems.Run();
         _transformSystems.Run();
     }

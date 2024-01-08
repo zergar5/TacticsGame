@@ -1,8 +1,8 @@
 ﻿using Leopotam.EcsLite;
 using SevenBoldPencil.EasyDi;
-using System.Drawing;
 using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Context;
+using TacticsGame.Core.Scene;
 using TacticsGame.Core.Units;
 
 namespace TacticsGame.Core.Movement.Reachability;
@@ -47,8 +47,6 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var currentUnit in _currentUnitFilter)
         {
-            if (!_movements.Get(currentUnit).IsMoving) continue;
-
             var position = _transforms.Get(currentUnit).Location;
 
             var (row, column) = _cartographer.FindIndex(position);

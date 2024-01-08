@@ -1,25 +1,74 @@
-﻿namespace TacticsGame.Core.Mechanics.Queue;
+﻿using System.Collections.ObjectModel;
+
+namespace TacticsGame.Core.Mechanics.Queue;
 
 public class GameQueue
 {
-    private readonly LinkedList<int> _unitsQueue;
+    private readonly ObservableCollection<int> _unitsQueue;
+    private int _currentIndex = -1;
 
-    public GameQueue(List<int> units)
+    public GameQueue(ObservableCollection<int> unitsQueue)
     {
-        _unitsQueue = new LinkedList<int>(units);
+        _unitsQueue = unitsQueue;
+    }
+
+    public void SetUnits(Dictionary<int, int> unitsMovements)
+    {
+        var orderedUnits = OrderUnitsByMovement(unitsMovements);
+
+        foreach (var unit in orderedUnits)
+        {
+            _unitsQueue.Add(unit);
+        }
+    }
+
+    public int CurrentUnit()
+    {
+        return _unitsQueue[_currentIndex];
     }
 
     public int NextUnit()
     {
-        var currentUnit = _unitsQueue.First;
+        if (_currentIndex == _unitsQueue.Count - 1 || _currentIndex == -1)
+        {
+            _currentIndex = 0;
+        }
+        else
+        {
+            _currentIndex++;
+        }
 
-        var nextUnit = currentUnit.Next;
+        var currentUnit = _unitsQueue[_currentIndex];
 
-        return nextUnit.Value;
+        return currentUnit;
     }
 
-    public int NextTurn()
+    public void RemoveUnit(int unit)
     {
-        return 0;
+        _unitsQueue.Remove(unit);
+    }
+
+    public void UpdateOrder(Dictionary<int, int> unitsMovements)
+    {
+        var orderedUnits = OrderUnitsByMovement(unitsMovements);
+
+        for (var i = 0; i < _unitsQueue.Count; i++)
+        {
+            if (orderedUnits[i] == _unitsQueue[i]) continue;
+
+            var newIndex = orderedUnits.IndexOf(_unitsQueue[i]);
+
+            _unitsQueue.Move(i, newIndex);
+        }
+    }
+
+    public List<int> OrderUnitsByMovement(Dictionary<int, int> unitsMovements)
+    {
+        var orderedUnits = unitsMovements
+            .OrderBy(x => x.Value)
+            .Select(x => x.Key)
+            .ToList();
+
+        return orderedUnits;
     }
 }

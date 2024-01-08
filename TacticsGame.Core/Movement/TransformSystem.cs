@@ -1,5 +1,4 @@
 ﻿using Leopotam.EcsLite;
-using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Movement.Pathfinding;
 using TacticsGame.Core.Units;
 
@@ -23,7 +22,7 @@ public class TransformSystem : IEcsInitSystem, IEcsRunSystem
         _path = world.GetPool<PathComponent>();
 
         _currentUnitFilter = world.Filter<CurrentUnitMarker>().Inc<UnitProfileComponent>().End();
-        _battlefieldFilter = world.Filter<BattlefieldComponent>().End();
+        //_battlefieldFilter = world.Filter<BattlefieldComponent>().End();
     }
 
     public void Run(IEcsSystems systems)
@@ -42,26 +41,23 @@ public class TransformSystem : IEcsInitSystem, IEcsRunSystem
 
         var remainingMovement = movementComponent.RemainingMovement;
 
-        //Потом убрать
-        if (remainingMovement == 0) return;
-
         ref var currentUnitLocationComponent = ref _locations.Get(currentUnit);
 
         ref var pathComponent = ref _path.Get(currentUnit);
         var path = pathComponent.Path;
 
-        if (path.Count > remainingMovement)
-        {
-            currentUnitLocationComponent.Location = path[remainingMovement].Location;
-            pathComponent.Path.Clear();
-        }
-        else
+        if (path.Count - 1 <= remainingMovement)
         {
             movementComponent.RemainingMovement -= path.Count - 1;
 
             currentUnitLocationComponent.Location = path[^1].Location;
             pathComponent.Path.Clear();
         }
+        //else
+        //{
+        //    currentUnitLocationComponent.Location = path[remainingMovement].Location;
+        //    pathComponent.Path.Clear();
+        //}
 
         if (movementComponent.RemainingMovement == 0) movementComponent.IsMoving = false;
     }

@@ -17,9 +17,8 @@
 
   <ItemGroup>
     <Folder Include="Context\" />
-    <Folder Include="Scene\" />
+    <Folder Include="Handlers\UnitStateHandlers\" />
     <Folder Include="Textures\Map\" />
-    <Folder Include="Hp\" />
   </ItemGroup>
 
 </Project>
