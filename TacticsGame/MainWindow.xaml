@@ -18,6 +18,7 @@
                                MouseMove="GlWindow_OnMouseMove"
                                Grid.Column="0"
                                Grid.Row="0"
+                               DrawFPS="True"
         />
         <Grid x:Name="panelArea" VerticalAlignment="Top">
             <Grid.RowDefinitions>
@@ -76,6 +77,7 @@
                         Background="#d1d1d1"
                         Click="PassButton_OnClick">
                     <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame.Core\Assets\Icons\UI\pass.png"
+
                            Stretch="Uniform" 
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center">

@@ -1,12 +1,12 @@
 ﻿using TacticsGame.Core.Providers;
 
-namespace TacticsGame.Core.Handlers.UnitStateHandlers;
+namespace TacticsGame.Core.Handlers.StateHandlers;
 
-public class MovingStateHandler : IUnitStateHandler
+public class MovingStateHandler : IStateHandler
 {
     private bool _isMoving;
 
-    public MovingStateHandler(UnitStateProvider unitStateProvider)
+    public MovingStateHandler(StateProvider unitStateProvider)
     {
         unitStateProvider.MovingStateChanged += HandleMovingStateChanged;
     }

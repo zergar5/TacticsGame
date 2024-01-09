@@ -3,6 +3,7 @@ using SevenBoldPencil.EasyDi;
 using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Scene;
+using TacticsGame.Core.Shooting;
 using TacticsGame.Core.Units;
 
 namespace TacticsGame.Core.Movement.Reachability;
@@ -14,11 +15,14 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
 
     private EcsFilter _battlefieldFilter;
     private EcsFilter _currentUnitFilter;
+    private EcsFilter _currentWeaponFilter;
 
     private EcsPool<BattlefieldComponent> _battlefields;
     private EcsPool<MovementComponent> _movements;
     private EcsPool<LocationComponent> _transforms;
     private EcsPool<ReachableTilesComponent> _reachableTiles;
+    private EcsPool<RangeWeaponProfileComponent> _rangeWeapons;
+    private EcsPool<EligibleTargetsComponent> _eligibleTargets;
 
     private BattlefieldTiles _battlefieldTiles;
     private BFS _bfs;
@@ -31,37 +35,66 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
         _movements = world.GetPool<MovementComponent>();
         _transforms = world.GetPool<LocationComponent>();
         _reachableTiles = world.GetPool<ReachableTilesComponent>();
+        _rangeWeapons = world.GetPool<RangeWeaponProfileComponent>();
 
         _currentUnitFilter = world.Filter<CurrentUnitMarker>().Inc<UnitProfileComponent>().End();
         _battlefieldFilter = world.Filter<BattlefieldComponent>().End();
+        _currentWeaponFilter = world.Filter<CurrentWeaponMarker>().End();
 
         foreach (var battlefield in _battlefieldFilter)
         {
             _battlefieldTiles = _battlefields.Get(battlefield).Map;
         }
 
-        _bfs = new BFS(_battlefieldTiles);
+        _bfs = new BFS(_cartographer, _battlefieldTiles);
     }
 
     public void Run(IEcsSystems systems)
     {
         foreach (var currentUnit in _currentUnitFilter)
         {
-            var position = _transforms.Get(currentUnit).Location;
+            FindMovingReachableTiles(currentUnit);
 
-            var (row, column) = _cartographer.FindIndex(position);
-
-            var reachableTiles =
-                _bfs.FindReachableTiles(row, column, _movements.Get(currentUnit).RemainingMovement);
-
-            if (_reachableTiles.Has(currentUnit))
+            //Не окончено, нужно учесть, что если оружие постреляло, его нельзя выбрать ещё раз за этот ход
+            foreach (var currentWeapon in _currentWeaponFilter)
             {
-                _reachableTiles.Get(currentUnit).ReachableTiles = reachableTiles;
+                FindShootingReachableTiles(currentWeapon);
             }
-            else
-            {
-                _entityBuilder.Set(currentUnit, new ReachableTilesComponent(reachableTiles));
-            }
+        }
+    }
+
+    public void FindMovingReachableTiles(int currentUnit)
+    {
+        var position = _transforms.Get(currentUnit).Location;
+
+        var (row, column) = _cartographer.FindTileIndex(position);
+
+        var reachableTiles =
+            _bfs.FindReachableTiles(row, column, _movements.Get(currentUnit).RemainingMovement);
+
+        if (_reachableTiles.Has(currentUnit))
+        {
+            _reachableTiles.Get(currentUnit).ReachableTiles = reachableTiles;
+        }
+        else
+        {
+            _entityBuilder.Set(currentUnit, new ReachableTilesComponent(reachableTiles));
+        }
+    }
+
+    public void FindShootingReachableTiles(int currentWeapon)
+    {
+        var range = _rangeWeapons.Get(currentWeapon).Range;
+
+        var tiles = _cartographer.FindUnitTiles(range);
+
+        if (_eligibleTargets.Has(currentWeapon))
+        {
+            _eligibleTargets.Get(currentWeapon).EligibleTargetsTiles = tiles;
+        }
+        else
+        {
+            _entityBuilder.Set(currentWeapon, new ReachableTilesComponent(tiles));
         }
     }
 }

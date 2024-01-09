@@ -47,7 +47,7 @@ public partial class MainWindow : Window
     private OpenGL _gl;
     private DispatcherTimer _timer;
     private MousePositionProvider _positionProvider;
-    private UnitStateProvider _unitStateProvider;
+    private StateProvider _stateProvider;
     private ObservableCollection<int> _units = new();
 
     public MainWindow()
@@ -264,26 +264,31 @@ public partial class MainWindow : Window
 
     private void GlWindow_OnOpenGLDraw(object sender, OpenGLRoutedEventArgs args)
     {
-
+        //_game.Update();
+        //_stateProvider.IsMoving = false;
+        //_stateProvider.IsShooting = false;
+        //_game.Render();
     }
 
     private void Tick(object sender, EventArgs e)
     {
         _game.Update();
-        _unitStateProvider.IsMoving = false;
+        _stateProvider.IsMadeTurn = false;
+        _stateProvider.IsMoving = false;
+        _stateProvider.IsShooting = false;
         _game.Render();
     }
 
     private void GlWindow_OnOpenGLInitialized(object sender, OpenGLRoutedEventArgs args)
     {
         _positionProvider = new MousePositionProvider();
-        _unitStateProvider = new UnitStateProvider();
+        _stateProvider = new StateProvider();
 
         _game = new Game
         (
             new BasicGenerator(),
             _positionProvider,
-            _unitStateProvider,
+            _stateProvider,
             new CoordinatesConverter(GlWindow.OpenGL),
             _units
         );
@@ -317,7 +322,7 @@ public partial class MainWindow : Window
         var point = new PointF((float)position.X, (float)(GlWindow.ActualHeight - position.Y));
 
         _positionProvider.TargetPosition = point;
-        _unitStateProvider.IsMoving = true;
+        _stateProvider.IsMoving = true;
     }
 
     private void GlWindow_OnMouseMove(object sender, MouseEventArgs e)
@@ -332,6 +337,6 @@ public partial class MainWindow : Window
 
     private void PassButton_OnClick(object sender, RoutedEventArgs e)
     {
-        
+        _stateProvider.IsMadeTurn = true;
     }
 }

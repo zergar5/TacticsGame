@@ -1,7 +1,19 @@
 ﻿namespace TacticsGame.Core.Providers;
 
-public class UnitStateProvider
+public class StateProvider
 {
+    private bool _isMadeTurn;
+
+    public bool IsMadeTurn
+    {
+        get => _isMadeTurn;
+        set
+        {
+            _isMadeTurn = value;
+            OnMadeTurnStateChanged(value);
+        }
+    }
+
     private bool _isMoving;
 
     public bool IsMoving
@@ -29,9 +41,16 @@ public class UnitStateProvider
         }
     }
 
+    public event EventHandler<bool> MadeTurnStateChanged;
+
     public event EventHandler<bool> MovingStateChanged;
 
     public event EventHandler<bool> ShootingStateChanged;
+
+    protected virtual void OnMadeTurnStateChanged(bool value)
+    {
+        MadeTurnStateChanged?.Invoke(this, value);
+    }
 
     protected virtual void OnMovingStateChanged(bool value)
     {

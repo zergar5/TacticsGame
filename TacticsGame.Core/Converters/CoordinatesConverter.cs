@@ -16,6 +16,9 @@ public class CoordinatesConverter
     {
         var coordinates = _gl.UnProject(point.X, point.Y, 0);
 
-        return new PointF((float)coordinates[0], (float)coordinates[1]);
+        point.X = (float)coordinates[0];
+        point.Y = (float)coordinates[1];
+
+        return point;
     }
 }
