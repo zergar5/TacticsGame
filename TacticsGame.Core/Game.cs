@@ -61,6 +61,7 @@ public class Game
         _coordinatesConverter = coordinatesConverter;
 
         dtoProvider.SetWorld(_world);
+        dtoProvider.SetAssetsProvider(_assetsProvider);
 
         _setupSystems = new EcsSystems(_world);
         _setupSystems
