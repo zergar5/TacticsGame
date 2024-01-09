@@ -66,7 +66,7 @@ public partial class MainWindow : Window
 
         //Loaded += FillInTheQueue;
 
-        _units.CollectionChanged += Change;
+        _units.CollectionChanged += CollectionChange;
         passButton.Click += PassButton_Click;
 
     }
@@ -103,7 +103,7 @@ public partial class MainWindow : Window
     }
 
     
-    private void Change(object? sender, NotifyCollectionChangedEventArgs e)
+    private void CollectionChange(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
@@ -159,43 +159,7 @@ public partial class MainWindow : Window
             isResizing = false;
         }
     }
-    
-    private void FillInTheQueue(object sender, RoutedEventArgs e)
-    {
-
-        while (unitsList.Children.Count < 10)
-        {
-            if (_roundNumber != 1 && _info == _units.Count)
-            {
-                var roundCard = _round.CreateRoundBorder(_roundNumber);
-                roundCard.Unloaded += FillInTheQueue;
-                unitsList.Children.Add(roundCard);
-                _info = 0;
-            }
-
-
-            var unit = _unitsCards[0];
-
-             
-            var unitCard = unit.CreateBorder(unit.GetId());
-            unitCard.Unloaded += FillInTheQueue;
-            unitsList.Children.Add(unitCard);
-            
-            //group.MouseLeftButtonUp += Remove_Card;
-
-            _info++;
-
-            _unitsCards.RemoveAt(0);
-            _unitsCards.Add(unit);
-            if (_info == _units.Count)
-            {
-                _roundNumber++;
-            }
-        }
-
-
-
-    }
+        
 
     //private void AddUnitImage(Unit unit, StackPanel group)
     //{
@@ -243,14 +207,7 @@ public partial class MainWindow : Window
         {
             unitsList.Children.Remove(firstCard);
         }
-    }
-
-    //static void OnCollectionChanged(object sender,
-    //    System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    //{
-    //    var action = e.Action;
-    //}
-
+    }       
     private void GlWindow_OnOpenGLDraw(object sender, OpenGLRoutedEventArgs args)
     {
         //_game.Update();
