@@ -3,12 +3,15 @@ using SevenBoldPencil.EasyDi;
 using System.Drawing;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Movement;
+using TacticsGame.Core.Weapons;
 
 namespace TacticsGame.Core.Units;
 
 public class UnitSpawnerSystem : IEcsInitSystem
 {
     [EcsInject] private EntityBuilder _entityBuilder;
+    [EcsInject] private WeaponFactory _weaponFactory;
+    [EcsInject] private UnitFactory _unitFactory;
 
     private List<PointF> _positions = new() { new(0.25f, 0.25f), new(-0.25f, -0.25f) };
 
