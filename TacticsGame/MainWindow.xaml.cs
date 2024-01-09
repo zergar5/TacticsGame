@@ -67,7 +67,13 @@ public partial class MainWindow : Window
         //Loaded += FillInTheQueue;
 
         _units.CollectionChanged += Change;
+        passButton.Click += PassButton_Click;
 
+    }
+
+    private void PassButton_Click(object sender, RoutedEventArgs e)
+    {
+        unitsList.Children.RemoveAt(0);
     }
 
     private void Change(object? sender, NotifyCollectionChangedEventArgs e)
