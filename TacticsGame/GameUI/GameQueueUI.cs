@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using static TacticsGame.MainWindow;
 
-namespace TacticsGame.GameQueueUI
+namespace TacticsGame.GameUI
 {
-    internal class GameQueueUI
+    public class GameQueueUI
     {
               
     }
