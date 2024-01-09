@@ -159,7 +159,8 @@ public partial class MainWindow : Window
 
             isResizing = false;
         }
-   
+    }
+
     private void FillInTheQueue(object sender, RoutedEventArgs e)
     {
 
