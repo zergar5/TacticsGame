@@ -56,7 +56,7 @@ public class UIRenderSystem : IEcsInitSystem, IEcsRunSystem
         {
             var reachableTiles = _reachableTiles.Get(currentUnit).ReachableTiles;
 
-            var positionIndex = _cartographer.FindIndex(_positionHandler.GetPosition());
+            var positionIndex = _cartographer.FindTileIndex(_positionHandler.GetPosition());
 
             if (positionIndex.row == -1 || positionIndex.column == -1) continue;
 

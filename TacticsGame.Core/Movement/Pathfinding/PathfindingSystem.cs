@@ -4,7 +4,7 @@ using System.Drawing;
 using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
-using TacticsGame.Core.Handlers.UnitStateHandlers;
+using TacticsGame.Core.Handlers.StateHandlers;
 using TacticsGame.Core.Movement.Reachability;
 using TacticsGame.Core.Scene;
 using TacticsGame.Core.Units;
@@ -14,6 +14,7 @@ namespace TacticsGame.Core.Movement.Pathfinding;
 public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
 {
     [EcsInject] private readonly MouseTargetPositionHandler _positionHandler;
+    [EcsInject] private readonly MovingStateHandler _movingStateHandler;
     [EcsInject] private readonly EntityBuilder _entityBuilder;
     [EcsInject] private readonly Cartographer _cartographer;
 
@@ -49,30 +50,32 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
             _battlefieldTiles = battlefieldComponent.Map;
         }
 
-        _aStar = new AStar(_battlefieldTiles);
+        _aStar = new AStar(_cartographer, _battlefieldTiles);
     }
 
     public void Run(IEcsSystems systems)
     {
         foreach (var currentUnit in _currentUnitFilter)
         {
-            if (!_movements.Get(currentUnit).IsMoving) continue;
+            if (!_movingStateHandler.GetState()) continue;
 
             var targetPosition = _positionHandler.GetPosition();
 
             var position = _transforms.Get(currentUnit).Location;
 
-            var (row, column) = _cartographer.FindIndex(position);
+            var (row, column) = _cartographer.FindTileIndex(position);
 
-            var (targetRow, targetColumn) = _cartographer.FindIndex(targetPosition);
+            var (targetRow, targetColumn) = _cartographer.FindTileIndex(targetPosition);
 
             if (targetRow == -1 && targetColumn == -1) continue;
 
             var targetTile = _battlefieldTiles[targetRow, targetColumn];
 
-            if(!_reachableTiles.Get(currentUnit).ReachableTiles.Contains(targetTile)) continue;
+            if (!_reachableTiles.Get(currentUnit).ReachableTiles.Contains(targetTile)) continue;
 
             var path = _aStar.FindPath(row, column, targetRow, targetColumn);
+
+            _movements.Get(currentUnit).IsMoving = _movingStateHandler.GetState();
 
             if (_paths.Has(currentUnit))
             {
