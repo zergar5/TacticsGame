@@ -16,6 +16,8 @@ public class UnitsRenderSystem : IEcsInitSystem, IEcsRunSystem
     [EcsInject] private AssetsProvider _assetsProvider;
 
     private EcsFilter _units;
+
+    private EcsPool<SpriteComponent> _sprites;
     private EcsPool<LocationComponent> _transforms;
 
     private SizeF _tileSize;
@@ -28,6 +30,7 @@ public class UnitsRenderSystem : IEcsInitSystem, IEcsRunSystem
         _units = world.Filter<UnitProfileComponent>().End();
 
         var battlefields = world.GetPool<BattlefieldComponent>();
+        _sprites = world.GetPool<SpriteComponent>();
         _transforms = world.GetPool<LocationComponent>();
 
         foreach (var battlefield in battlefieldFilter)
@@ -42,8 +45,7 @@ public class UnitsRenderSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var unit in _units)
         {
-            if(unit == 1) _gl.BindTexture(OpenGL.GL_TEXTURE_2D, _assetsProvider.GetTexture("NecronWarrior"));
-            else if(unit == 2) _gl.BindTexture(OpenGL.GL_TEXTURE_2D, _assetsProvider.GetTexture("Termagant"));
+            _gl.BindTexture(OpenGL.GL_TEXTURE_2D, _assetsProvider.GetTexture(_sprites.Get(unit).Sprite));
 
             var location = _transforms.Get(unit).Location;
 
