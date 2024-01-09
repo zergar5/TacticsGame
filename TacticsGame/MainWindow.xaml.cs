@@ -70,12 +70,39 @@ public partial class MainWindow : Window
         passButton.Click += PassButton_Click;
 
     }
+    private void Fill()
+    {
+        while (unitsList.Children.Count < 10)
+        {
+            if (_roundNumber != 1 && _info == _units.Count || _info > _units.Count)
+            {
+                var roundCard = _round.CreateRoundBorder(_roundNumber);
+                unitsList.Children.Add(roundCard);
+                _info = 0;
+            }
+            foreach (var unit in _units)
+            {
 
+                var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder(_unitsCards.Find(x => x.Id.Equals(unit)).GetId());
+                unitsList.Children.Add(unitCard);
+
+                _info++;
+
+            }
+            if (_info == _units.Count)
+            {
+                _roundNumber++;
+            }
+
+        }
+    }
     private void PassButton_Click(object sender, RoutedEventArgs e)
     {
         unitsList.Children.RemoveAt(0);
+        Fill();
     }
 
+    
     private void Change(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
@@ -84,29 +111,7 @@ public partial class MainWindow : Window
                 unitsList.Children.Clear();
                 _roundNumber = 1;
                 _info = 0;
-                while (unitsList.Children.Count < 10)
-                {
-                    if (_roundNumber != 1 && _info == _units.Count)
-                    {
-                        var roundCard = _round.CreateRoundBorder(_roundNumber);
-                        unitsList.Children.Add(roundCard);
-                        _info = 0;
-                    }
-                    foreach (var unit in _units)
-                    {
-
-                        var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder(_unitsCards.Find(x => x.Id.Equals(unit)).GetId());
-                        unitsList.Children.Add(unitCard);
-
-                        _info++;
-
-                    }
-                    if (_info == _units.Count)
-                    {
-                        _roundNumber++;
-                    }
-
-                }
+                Fill();
                 break;
             case NotifyCollectionChangedAction.Remove:
                 var id = e.OldItems[0];
@@ -121,29 +126,7 @@ public partial class MainWindow : Window
                     unitsList.Children.Remove(child); // удаляем найденный элемент
                     i--; // уменьшаем индекс, чтобы не пропустить следующий элемент
                 }
-                while (unitsList.Children.Count < 10)
-                {
-                    if (_info >= _units.Count)
-                    {
-                        var roundCard = _round.CreateRoundBorder(_roundNumber);
-                        unitsList.Children.Add(roundCard);
-                        _info = 0;
-                    }
-                    foreach (var unit in _units)
-                    {
-
-                        var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder(_unitsCards.Find(x => x.Id.Equals(unit)).GetId());
-                        unitsList.Children.Add(unitCard);
-
-                        _info++;
-
-                    }
-                    if (_info == _units.Count)
-                    {
-                        _roundNumber++;
-                    }
-
-                }
+                Fill();
                 break;
             case NotifyCollectionChangedAction.Move:
 
