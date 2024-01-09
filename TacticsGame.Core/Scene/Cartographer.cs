@@ -2,6 +2,7 @@
 using System.Drawing;
 using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Movement;
+using TacticsGame.Core.Shooting;
 using TacticsGame.Core.Units;
 
 namespace TacticsGame.Core.Scene;
@@ -15,6 +16,7 @@ public class Cartographer
 
     private readonly EcsPool<UnitProfileComponent> _units;
     private readonly EcsPool<LocationComponent> _locations;
+    private readonly EcsPool<OwnershipComponent> _ownerships;
 
     private readonly BattlefieldTiles _battlefieldTiles;
     private readonly SizeF _tileSize;
@@ -36,6 +38,7 @@ public class Cartographer
         var battlefields = _world.GetPool<BattlefieldComponent>();
         _units = _world.GetPool<UnitProfileComponent>();
         _locations = _world.GetPool<LocationComponent>();
+        _ownerships = _world.GetPool<OwnershipComponent>();
 
         foreach (var battlefield in battlefieldFilter)
         {
@@ -62,7 +65,7 @@ public class Cartographer
         return column != -1 ? (row, column) : (-1, -1);
     }
 
-    public List<Tile> FindUnitTiles(int range)
+    public List<Tile> FindEnemyUnitTilesInRange(int range, int playerId)
     {
         (int currentRow, int currentColumn) currentIndex = (0, 0);
 
@@ -75,11 +78,13 @@ public class Cartographer
 
         foreach (var unit in _unitsFilter)
         {
+            if (_ownerships.Get(unit).OwnerId == playerId) continue;
+
             var tileIndex = FindTileIndex(_locations.Get(unit).Location);
 
             var distance = CalculateDistanceInTiles(currentIndex, tileIndex);
 
-            if(distance > 1 && distance <= range) unitTiles.Add(_battlefieldTiles[tileIndex]);
+            if (distance > 1 && distance <= range) unitTiles.Add(_battlefieldTiles[tileIndex]);
         }
 
         return unitTiles;

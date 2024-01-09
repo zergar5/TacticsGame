@@ -37,7 +37,7 @@ public partial class MainWindow : Window
     //        new(_path + "\\hero1.jpg", 70),
     //        new(_path + "\\hero1.jpg", 70),
     //        new(_path + "\\hero2.jpg", 1000)};
-    
+
     private bool isResizing = false;
     private Game _game;
     private OpenGL _gl;

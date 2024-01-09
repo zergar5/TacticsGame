@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Leopotam.EcsLite;
 using TacticsGame.Core.Damage;
+using TacticsGame.Core.Providers;
 using TacticsGame.Core.Render;
 using TacticsGame.Core.Shooting;
 using TacticsGame.Core.Units;
@@ -13,6 +14,7 @@ namespace TacticsGame.Core.Dto;
 
 public class DtoProvider
 {
+    private AssetsProvider _assetsProvider;
     private EcsFilter _unitsFilter;
     private EcsFilter _weaponsFilter;
 
@@ -28,6 +30,11 @@ public class DtoProvider
         _wounds = world.GetPool<WoundsComponent>();
         _sprites = world.GetPool<SpriteComponent>();
         _owners = world.GetPool<OwnershipComponent>();
+    }
+
+    public void SetAssetsProvider(AssetsProvider assetsProvider)
+    {
+        _assetsProvider = assetsProvider;
     }
 
     public UnitDto CreateUnitDto(int unitId)
@@ -46,7 +53,7 @@ public class DtoProvider
         }
 
         var unitDto = new UnitDto(unitId, woundsComponent.Wounds, woundsComponent.RemainingWounds,
-           "", weaponDtos);
+                      _assetsProvider.GetPath(spriteComponent.Sprite), weaponDtos);
 
         return unitDto;
     }
@@ -55,7 +62,7 @@ public class DtoProvider
     {
         var spriteComponent = _sprites.Get(weaponId);
 
-        var weaponDto = new WeaponDto(weaponId, spriteComponent.Sprite);
+        var weaponDto = new WeaponDto(weaponId, _assetsProvider.GetPath(spriteComponent.Sprite));
 
         return weaponDto;
     }

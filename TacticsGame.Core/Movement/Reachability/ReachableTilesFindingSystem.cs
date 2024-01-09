@@ -23,6 +23,7 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
     private EcsPool<ReachableTilesComponent> _reachableTiles;
     private EcsPool<RangeWeaponProfileComponent> _rangeWeapons;
     private EcsPool<EligibleTargetsComponent> _eligibleTargets;
+    private EcsPool<OwnershipComponent> _ownerships;
 
     private BattlefieldTiles _battlefieldTiles;
     private BFS _bfs;
@@ -36,6 +37,7 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
         _transforms = world.GetPool<LocationComponent>();
         _reachableTiles = world.GetPool<ReachableTilesComponent>();
         _rangeWeapons = world.GetPool<RangeWeaponProfileComponent>();
+        _ownerships = world.GetPool<OwnershipComponent>();
 
         _currentUnitFilter = world.Filter<CurrentUnitMarker>().Inc<UnitProfileComponent>().End();
         _battlefieldFilter = world.Filter<BattlefieldComponent>().End();
@@ -86,7 +88,8 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
     {
         var range = _rangeWeapons.Get(currentWeapon).Range;
 
-        var tiles = _cartographer.FindUnitTiles(range);
+        var tiles = _cartographer.FindEnemyUnitTilesInRange(range,
+            _ownerships.Get(_ownerships.Get(currentWeapon).OwnerId).OwnerId);
 
         if (_eligibleTargets.Has(currentWeapon))
         {

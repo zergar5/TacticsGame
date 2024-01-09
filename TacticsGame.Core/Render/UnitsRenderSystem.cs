@@ -5,6 +5,7 @@ using SharpGL.SceneGraph.Assets;
 using System.Drawing;
 using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Movement;
+using TacticsGame.Core.Providers;
 using TacticsGame.Core.Units;
 
 namespace TacticsGame.Core.Render;
@@ -12,11 +13,12 @@ namespace TacticsGame.Core.Render;
 public class UnitsRenderSystem : IEcsInitSystem, IEcsRunSystem
 {
     [EcsInject] private OpenGL _gl;
+    [EcsInject] private AssetsProvider _assetsProvider;
 
     private EcsFilter _units;
+
+    private EcsPool<SpriteComponent> _sprites;
     private EcsPool<LocationComponent> _transforms;
-    private Texture _texture1 = new();
-    private Texture _texture2 = new();
 
     private SizeF _tileSize;
 
@@ -28,15 +30,8 @@ public class UnitsRenderSystem : IEcsInitSystem, IEcsRunSystem
         _units = world.Filter<UnitProfileComponent>().End();
 
         var battlefields = world.GetPool<BattlefieldComponent>();
+        _sprites = world.GetPool<SpriteComponent>();
         _transforms = world.GetPool<LocationComponent>();
-        
-        var textureImage = new Bitmap(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\Units\u001.jpg");
-
-        _texture1.Create(_gl, textureImage);
-
-        textureImage = new Bitmap(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\Units\u013.jpg");
-
-        _texture2.Create(_gl, textureImage);
 
         foreach (var battlefield in battlefieldFilter)
         {
@@ -50,8 +45,7 @@ public class UnitsRenderSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var unit in _units)
         {
-            if(unit == 1) _gl.BindTexture(OpenGL.GL_TEXTURE_2D, _texture1.TextureName);
-            else if(unit == 2) _gl.BindTexture(OpenGL.GL_TEXTURE_2D, _texture2.TextureName);
+            _gl.BindTexture(OpenGL.GL_TEXTURE_2D, _assetsProvider.GetTexture(_sprites.Get(unit).Sprite));
 
             var location = _transforms.Get(unit).Location;
 

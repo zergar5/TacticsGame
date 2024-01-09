@@ -8,4 +8,9 @@ public struct OwnershipComponent
     {
         OwnerId = -1;
     }
+
+    public OwnershipComponent(int ownerId)
+    {
+        OwnerId = ownerId;
+    }
 }
