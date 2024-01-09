@@ -2,10 +2,15 @@
 
 public struct OwnershipComponent
 {
-    public int WeaponId { get; set; }
+    public int OwnerId { get; set; }
 
     public OwnershipComponent()
     {
-        WeaponId = -1;
+        OwnerId = -1;
+    }
+
+    public OwnershipComponent(int ownerId)
+    {
+        OwnerId = ownerId;
     }
 }

@@ -73,24 +73,30 @@ namespace TacticsGame
 
     public class UnitCard
     {
-        public string Name { get; set; }
+        public int Id { get; set; }
         public string ImagePath { get; set; }
         public int Health { get; set; }
         public int MaxHealth { get; set; }
 
-        public UnitCard(string name, string imagePath, int health, int maxHealth)
+        public UnitCard(int id, string imagePath, int health, int maxHealth)
         {
-            Name = name;
+            Id = id;
             ImagePath = imagePath;
             Health = health;
             MaxHealth = maxHealth;
         }
 
-        public Border CreateBorder()
+        public string GetId()
+        {
+            return Id.ToString();
+        }
+
+        public Border CreateBorder(string id)
         {
             var border = new Border();
             border.BorderThickness = new Thickness(1);
             border.BorderBrush = Brushes.Black;
+            border.Name = "Unit" + id;
             //border.Margin = new Thickness(10);
             //border.Padding = new Thickness(5);
             //StackPanel stackPanel = (StackPanel)Application.Current.MainWindow.FindName("unitsList");
