@@ -41,8 +41,6 @@ public partial class MainWindow : Window
     private RoundCard _round = new(@$"{Directory.GetCurrentDirectory()}\TacticsGame.Core\Assets\Icons\UI\skull.png");
     private int _info = 0;
     private bool isResizing = false;
-    private int _unitsNumber = 0; 
-
     private Game _game;
     private OpenGL _gl;
     private DispatcherTimer _timer;
@@ -57,20 +55,56 @@ public partial class MainWindow : Window
         string[] imagesPath = Directory.GetFiles(_path);
         laserButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.1 });
         laserButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
-        gunButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
-        gunButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
+        //gunButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
+        //gunButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
         passButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
         passButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
         unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.5 });
 
-
-        //Loaded += FillInTheQueue;
-
-        _units.CollectionChanged += Change;
+        _units.CollectionChanged += CollectionChange;
+        passButton.Click += PassButton_Click;
 
     }
+    private void FillQueue()
+    {
+        while (unitsList.Children.Count < 10)
+        {
+            if (_roundNumber != 1 && _info == _units.Count || _info > _units.Count)
+            {
+                var roundCard = _round.CreateRoundBorder(_roundNumber);
+                unitsList.Children.Add(roundCard);
+                _info = 0;
+            }
+            foreach (var unit in _units)
+            {
 
-    private void Change(object? sender, NotifyCollectionChangedEventArgs e)
+                var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder(_unitsCards.Find(x => x.Id.Equals(unit)).GetId());
+                unitsList.Children.Add(unitCard);
+
+                _info++;
+
+            }
+            if (_info == _units.Count)
+            {
+                _roundNumber++;
+            }
+
+        }
+    }
+    private void PassButton_Click(object sender, RoutedEventArgs e)
+    {
+        unitsList.Children.RemoveAt(0);
+        var firstCard = (Border)unitsList.Children[0];
+        var secondCard = (Border)unitsList.Children[1];
+        if (((Grid)firstCard.Child).Children[1] is TextBlock || ((Grid)firstCard.Child).Children[1] is TextBlock && ((Grid)secondCard.Child).Children[1] is TextBlock)
+        {
+            unitsList.Children.Remove(firstCard);
+        }
+        FillQueue();
+    }
+
+    
+    private void CollectionChange(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
@@ -78,29 +112,7 @@ public partial class MainWindow : Window
                 unitsList.Children.Clear();
                 _roundNumber = 1;
                 _info = 0;
-                while (unitsList.Children.Count < 10)
-                {
-                    if (_roundNumber != 1 && _info == _units.Count)
-                    {
-                        var roundCard = _round.CreateRoundBorder(_roundNumber);
-                        unitsList.Children.Add(roundCard);
-                        _info = 0;
-                    }
-                    foreach (var unit in _units)
-                    {
-
-                        var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder(_unitsCards.Find(x => x.Id.Equals(unit)).GetId());
-                        unitsList.Children.Add(unitCard);
-
-                        _info++;
-
-                    }
-                    if (_info == _units.Count)
-                    {
-                        _roundNumber++;
-                    }
-
-                }
+                FillQueue();
                 break;
             case NotifyCollectionChangedAction.Remove:
                 var id = e.OldItems[0];
@@ -115,29 +127,7 @@ public partial class MainWindow : Window
                     unitsList.Children.Remove(child); // удаляем найденный элемент
                     i--; // уменьшаем индекс, чтобы не пропустить следующий элемент
                 }
-                while (unitsList.Children.Count < 10)
-                {
-                    if (_info >= _units.Count)
-                    {
-                        var roundCard = _round.CreateRoundBorder(_roundNumber);
-                        unitsList.Children.Add(roundCard);
-                        _info = 0;
-                    }
-                    foreach (var unit in _units)
-                    {
-
-                        var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder(_unitsCards.Find(x => x.Id.Equals(unit)).GetId());
-                        unitsList.Children.Add(unitCard);
-
-                        _info++;
-
-                    }
-                    if (_info == _units.Count)
-                    {
-                        _roundNumber++;
-                    }
-
-                }
+                FillQueue();
                 break;
             case NotifyCollectionChangedAction.Move:
 
@@ -170,43 +160,7 @@ public partial class MainWindow : Window
             isResizing = false;
         }
     }
-    
-    private void FillInTheQueue(object sender, RoutedEventArgs e)
-    {
-
-        while (unitsList.Children.Count < 10)
-        {
-            if (_roundNumber != 1 && _info == _units.Count)
-            {
-                var roundCard = _round.CreateRoundBorder(_roundNumber);
-                roundCard.Unloaded += FillInTheQueue;
-                unitsList.Children.Add(roundCard);
-                _info = 0;
-            }
-
-
-            var unit = _unitsCards[0];
-
-             
-            var unitCard = unit.CreateBorder(unit.GetId());
-            unitCard.Unloaded += FillInTheQueue;
-            unitsList.Children.Add(unitCard);
-            
-            //group.MouseLeftButtonUp += Remove_Card;
-
-            _info++;
-
-            _unitsCards.RemoveAt(0);
-            _unitsCards.Add(unit);
-            if (_info == _units.Count)
-            {
-                _roundNumber++;
-            }
-        }
-
-
-
-    }
+        
 
     //private void AddUnitImage(Unit unit, StackPanel group)
     //{
@@ -248,20 +202,14 @@ public partial class MainWindow : Window
     //}
     private void Remove_Card(object sender, RoutedEventArgs e)
     {
-        unitsList.Children.Remove((Border)sender); var firstCard = (Border)unitsList.Children[0];
+        unitsList.Children.Remove((Border)sender);
+        var firstCard = (Border)unitsList.Children[0];
         var secondCard = (Border)unitsList.Children[1];
         if (((Grid)firstCard.Child).Children[1] is TextBlock && ((Grid)secondCard.Child).Children[1] is TextBlock)
         {
             unitsList.Children.Remove(firstCard);
         }
-    }
-
-    //static void OnCollectionChanged(object sender,
-    //    System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    //{
-    //    var action = e.Action;
-    //}
-
+    }       
     private void GlWindow_OnOpenGLDraw(object sender, OpenGLRoutedEventArgs args)
     {
         //_game.Update();
