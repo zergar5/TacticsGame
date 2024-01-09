@@ -26,9 +26,9 @@ namespace TacticsGame.GameUI
         private int _round = 1;
         private int _info = 0;
         private UnitCard _unitCard;
-        private RoundCard _roundImagePath = new(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\UI\skull.png");
+        private RoundCard _roundImagePath = new(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\UI\Round.png");
         private static string _path = @$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\Units\";
-        private Dictionary<int, UnitCard> _unitsCards;
+        private Dictionary<int, UnitCard> _unitsCards = new();
         private DtoProvider _dtoProvider;
         public UI(StackPanel queuePanel, ObservableCollection<int> units, Button weaponButton, Button passButton, DtoProvider dtoProvider)
         {
@@ -102,6 +102,7 @@ namespace TacticsGame.GameUI
                 foreach (var unitCard in _unitsCards)
                 {
                     var border = unitCard.Value.CreateUnitBorder();
+                    if(_queuePanel.Children.Count >= 10) break;
                     _queuePanel.Children.Add(border);
 
                     _info++;

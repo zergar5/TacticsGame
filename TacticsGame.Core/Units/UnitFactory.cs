@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TacticsGame.Core.Context;
+using TacticsGame.Core.Damage;
 using TacticsGame.Core.Movement;
 using TacticsGame.Core.Units.Datasheets;
 using TacticsGame.Core.Weapons.Profiles;
@@ -42,6 +43,7 @@ namespace TacticsGame.Core.Units
                 .Init()
                 .Set(new UnitProfileComponent(unitDatasheet))
                 .Set(new MovementComponent(unitDatasheet.Movement))
+                .Set(new WoundsComponent(unitDatasheet.Wounds))
                 .Set(new UnitTurnStateComponent())
                 .Build();
 
