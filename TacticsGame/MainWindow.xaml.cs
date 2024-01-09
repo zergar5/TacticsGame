@@ -159,8 +159,40 @@ public partial class MainWindow : Window
 
             isResizing = false;
         }
+   
+    private void FillInTheQueue(object sender, RoutedEventArgs e)
+    {
+
+        while (unitsList.Children.Count < 10)
+        {
+            if (_roundNumber != 1 && _info == _units.Count)
+            {
+                var roundCard = _round.CreateRoundBorder(_roundNumber);
+                roundCard.Unloaded += FillInTheQueue;
+                unitsList.Children.Add(roundCard);
+                _info = 0;
+            }
+
+
+            var unit = _unitsCards[0];
+
+             
+            var unitCard = unit.CreateBorder(unit.GetId());
+            unitCard.Unloaded += FillInTheQueue;
+            unitsList.Children.Add(unitCard);
+            
+            //group.MouseLeftButtonUp += Remove_Card;
+
+            _info++;
+
+            _unitsCards.RemoveAt(0);
+            _unitsCards.Add(unit);
+            if (_info == _units.Count)
+            {
+                _roundNumber++;
+            }
+        }
     }
-        
 
     //private void AddUnitImage(Unit unit, StackPanel group)
     //{
@@ -200,6 +232,7 @@ public partial class MainWindow : Window
     //{
     //    healthBar.Value = hp;
     //}
+
     private void Remove_Card(object sender, RoutedEventArgs e)
     {
         unitsList.Children.Remove((Border)sender);
@@ -213,6 +246,7 @@ public partial class MainWindow : Window
     private void GlWindow_OnOpenGLDraw(object sender, OpenGLRoutedEventArgs args)
     {
         //_game.Update();
+        //_stateProvider.IsMadeTurn = false;
         //_stateProvider.IsMoving = false;
         //_stateProvider.IsShooting = false;
         //_game.Render();
@@ -225,6 +259,7 @@ public partial class MainWindow : Window
         _stateProvider.IsMoving = false;
         _stateProvider.IsShooting = false;
         _game.Render();
+        GlWindow.DoRender();
     }
 
     private void GlWindow_OnOpenGLInitialized(object sender, OpenGLRoutedEventArgs args)
@@ -242,6 +277,7 @@ public partial class MainWindow : Window
         );
 
         _gl = args.OpenGL;
+        GlWindow.RenderTrigger = RenderTrigger.Manual;
 
         _game.InitRenderSystems(args.OpenGL);
 

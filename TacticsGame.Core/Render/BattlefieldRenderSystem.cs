@@ -24,23 +24,20 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
 
         _battlefields = world.GetPool<BattlefieldComponent>();
 
-
+        _gl.Enable(OpenGL.GL_TEXTURE_2D);
 
         var textureImage = new Bitmap(@$"{Directory.GetCurrentDirectory()}\TacticsGame.Core\Assets\Textures\Map\bf1.jpg");
 
         _texture.Create(_gl, textureImage);
 
-        _texture.Bind(_gl);
+        //_texture.Bind(_gl);
     }
 
     public void Run(IEcsSystems systems)
     {
-
-
-        //_gl.ActiveTexture(OpenGL.GL_TEXTURE0);
-        //_gl.BindTexture(OpenGL.GL_TEXTURE_2D, _assetManager.GetTexture("Floor"));
-        _gl.Enable(OpenGL.GL_TEXTURE_2D);
-
+        //_gl.ActiveTexture(_texture.TextureName);
+        _gl.BindTexture(OpenGL.GL_TEXTURE_2D, _texture.TextureName);
+        
         _gl.Color(1f, 1f, 1f, 1f);
         _gl.Begin(OpenGL.GL_TRIANGLE_FAN);
 
@@ -55,7 +52,9 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
 
         _gl.End();
 
-        _gl.Disable(OpenGL.GL_TEXTURE_2D);
+        _gl.BindTexture(OpenGL.GL_TEXTURE_2D, 0);
+
+        //_gl.Disable(OpenGL.GL_TEXTURE_2D);
 
         _gl.LineWidth(2);
 
