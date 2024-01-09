@@ -4,6 +4,7 @@ using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
 using TacticsGame.Core.Handlers.StateHandlers;
+using TacticsGame.Core.Movement;
 using TacticsGame.Core.Movement.Reachability;
 using TacticsGame.Core.Scene;
 using TacticsGame.Core.Units;
@@ -28,6 +29,15 @@ public class RangeTargetingSystem : IEcsInitSystem, IEcsRunSystem
 
     public void Init(IEcsSystems systems)
     {
+        var world = systems.GetWorld();
+
+        _currentRangeWeapon = world.Filter<CurrentUnitMarker>().Inc<RangeWeaponProfileComponent>().End();
+        _battlefieldFilter = world.Filter<BattlefieldComponent>().End();
+
+        _rangeWeapons = world.GetPool<RangeWeaponComponent>();
+        _eligibleTargets = world.GetPool<EligibleTargetsComponent>();
+        _battlefields = world.GetPool<BattlefieldComponent>();
+
         foreach (var battlefield in _battlefieldFilter)
         {
             _battlefieldTiles = _battlefields.Get(battlefield).Map;

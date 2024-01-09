@@ -6,8 +6,10 @@ using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Battlefield.Generators;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Converters;
+using TacticsGame.Core.Damage;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
 using TacticsGame.Core.Handlers.StateHandlers;
+using TacticsGame.Core.Mechanics;
 using TacticsGame.Core.Mechanics.Queue;
 using TacticsGame.Core.Movement;
 using TacticsGame.Core.Movement.Pathfinding;
@@ -15,6 +17,7 @@ using TacticsGame.Core.Movement.Reachability;
 using TacticsGame.Core.Providers;
 using TacticsGame.Core.Render;
 using TacticsGame.Core.Scene;
+using TacticsGame.Core.Shooting;
 using TacticsGame.Core.Units;
 
 namespace TacticsGame.Core;
@@ -32,6 +35,7 @@ public class Game
     private readonly EcsSystems _setupSystems;
     private readonly EcsSystems _gameplaySystems;
     private readonly EcsSystems _movementSystems;
+    private readonly EcsSystems _shootingSystems;
     private readonly EcsSystems _transformSystems;
     private EcsSystems _renderSystems;
 
@@ -39,7 +43,7 @@ public class Game
     (
         IBattlefieldGenerator battlefieldGenerator,
         MousePositionProvider positionProvider,
-        StateProvider unitStateProvider,
+        StateProvider stateProvider,
         CoordinatesConverter coordinatesConverter,
         ObservableCollection<int> units
     )
@@ -63,15 +67,26 @@ public class Game
         _gameplaySystems = new EcsSystems(_world);
         _gameplaySystems
             .Add(new GameQueueSystem())
-            .Inject(new GameQueue(units), _entityBuilder, new MovingStateHandler(unitStateProvider))
+            .Inject(new GameQueue(units), _entityBuilder, new MovingStateHandler(stateProvider))
             .Init();
+
+        var mouseTargetPositionHandler = new MouseTargetPositionHandler(_positionProvider, coordinatesConverter);
 
         _movementSystems = new EcsSystems(_world);
         _movementSystems
             .Add(new ReachableTilesFindingSystem())
             .Add(new PathfindingSystem())
-            .Inject(new MouseTargetPositionHandler(_positionProvider, _coordinatesConverter), _entityBuilder)
+            .Inject(mouseTargetPositionHandler, _entityBuilder)
             .Inject(_cartographer)
+            .Init();
+
+        _shootingSystems = new EcsSystems(_world);
+        _shootingSystems
+            .Add(new RangeTargetingSystem())
+            .Add(new ShootingSystem())
+            .Add(new DamageSystem())
+            .Inject(mouseTargetPositionHandler, new ShootingStateHandler(stateProvider))
+            .Inject(_cartographer, _entityBuilder, new DiceRoller())
             .Init();
 
         _transformSystems = new EcsSystems(_world);
@@ -96,6 +111,7 @@ public class Game
     {
         _gameplaySystems.Run();
         _movementSystems.Run();
+        _shootingSystems.Run();
         _transformSystems.Run();
     }
 
