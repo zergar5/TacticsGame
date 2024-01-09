@@ -48,11 +48,13 @@ public class RangeTargetingSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var currentRangeWeapon in _currentRangeWeapon)
         {
+            if (!_eligibleTargets.Has(currentRangeWeapon)) continue;
+
             var eligibleTargetsTiles = _eligibleTargets.Get(currentRangeWeapon).EligibleTargetsTiles;
 
             if (!_shootingStateHandler.GetState()) continue;
 
-            var targetTileIndex = 
+            var targetTileIndex =
                 _cartographer.FindTileIndex(_mouseTargetPositionHandler.GetPosition());
 
             if (targetTileIndex.row == -1 || targetTileIndex.column == -1) continue;
@@ -61,7 +63,7 @@ public class RangeTargetingSystem : IEcsInitSystem, IEcsRunSystem
 
             if (!eligibleTargetsTiles.Contains(targetTile)) continue;
 
-            _rangeWeapons.Get(currentRangeWeapon).IsShooting = true;
+            _rangeWeapons.Get(currentRangeWeapon).IsShooting = _shootingStateHandler.GetState();
 
             _entityBuilder.Set(currentRangeWeapon,
                 new TargetComponent(_cartographer.FindUnitId(targetTile)));

@@ -55,7 +55,7 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
         {
             FindMovingReachableTiles(currentUnit);
 
-            //Не окончено
+            //Не окончено, нужно учесть, что если оружие постреляло, его нельзя выбрать ещё раз за этот ход
             foreach (var currentWeapon in _currentWeaponFilter)
             {
                 FindShootingReachableTiles(currentWeapon);

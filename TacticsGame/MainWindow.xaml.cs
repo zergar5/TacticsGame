@@ -200,6 +200,7 @@ public partial class MainWindow : Window
     private void Tick(object sender, EventArgs e)
     {
         _game.Update();
+        _stateProvider.IsMadeTurn = false;
         _stateProvider.IsMoving = false;
         _stateProvider.IsShooting = false;
         _game.Render();
@@ -263,6 +264,6 @@ public partial class MainWindow : Window
 
     private void PassButton_OnClick(object sender, RoutedEventArgs e)
     {
-        
+        _stateProvider.IsMadeTurn = true;
     }
 }

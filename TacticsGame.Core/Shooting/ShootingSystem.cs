@@ -56,13 +56,14 @@ public class ShootingSystem : IEcsInitSystem, IEcsRunSystem
 
                 MakeToWoundRolls(currentWeapon, weaponStrength, unitToughness);
 
-                if (hitsResultComponent.SuccessfulWounds == 0)
-                {
-                    rangeWeaponComponent.MadeShot = true;
-                }
+                if (hitsResultComponent.SuccessfulWounds != 0) continue;
+
+                rangeWeaponComponent.IsShooting = false;
+                rangeWeaponComponent.MadeShot = true;
             }
             else
             {
+                rangeWeaponComponent.IsShooting = false;
                 rangeWeaponComponent.MadeShot = true;
             }
         }

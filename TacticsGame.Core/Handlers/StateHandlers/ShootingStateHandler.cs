@@ -8,7 +8,7 @@ public class ShootingStateHandler : IStateHandler
 
     public ShootingStateHandler(StateProvider stateProvider)
     {
-        stateProvider.MovingStateChanged += HandleShootingStateChanged;
+        stateProvider.ShootingStateChanged += HandleShootingStateChanged;
     }
 
     public bool GetState()

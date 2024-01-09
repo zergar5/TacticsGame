@@ -67,7 +67,8 @@ public class Game
         _gameplaySystems = new EcsSystems(_world);
         _gameplaySystems
             .Add(new GameQueueSystem())
-            .Inject(new GameQueue(units), _entityBuilder, new MovingStateHandler(stateProvider))
+            .Inject(new GameQueue(units), _entityBuilder)
+            .Inject(new MadeTurnStateHandler(stateProvider), new MadeTurnStateHandler(stateProvider))
             .Init();
 
         var mouseTargetPositionHandler = new MouseTargetPositionHandler(_positionProvider, coordinatesConverter);
@@ -76,7 +77,7 @@ public class Game
         _movementSystems
             .Add(new ReachableTilesFindingSystem())
             .Add(new PathfindingSystem())
-            .Inject(mouseTargetPositionHandler, _entityBuilder)
+            .Inject(mouseTargetPositionHandler, new MovingStateHandler(stateProvider), _entityBuilder)
             .Inject(_cartographer)
             .Init();
 

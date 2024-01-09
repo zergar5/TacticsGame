@@ -39,20 +39,19 @@ public class DamageSystem : IEcsInitSystem, IEcsRunSystem
         {
             ref var rangeWeaponComponent = ref _rangeWeapons.Get(currentWeapon);
 
-            if (rangeWeaponComponent is { MadeShot: false, IsShooting: true })
-            {
-                var rangeWeaponProfileComponent = _rangeWeaponProfiles.Get(currentWeapon);
-                var unitProfileComponent = _unitProfiles.Get(_targets.Get(currentWeapon).UnitId);
+            if (rangeWeaponComponent is not { MadeShot: false, IsShooting: true }) continue;
 
-                var ap = rangeWeaponProfileComponent.AP;
-                var save = unitProfileComponent.Save;
+            var rangeWeaponProfileComponent = _rangeWeaponProfiles.Get(currentWeapon);
+            var unitProfileComponent = _unitProfiles.Get(_targets.Get(currentWeapon).UnitId);
 
-                MakeSaveRolls(currentWeapon, ap, save);
-                RemoveСasualties(currentWeapon);
+            var ap = rangeWeaponProfileComponent.AP;
+            var save = unitProfileComponent.Save;
 
-                rangeWeaponComponent.IsShooting = false;
-                rangeWeaponComponent.MadeShot = true;
-            }
+            MakeSaveRolls(currentWeapon, ap, save);
+            RemoveСasualties(currentWeapon);
+
+            rangeWeaponComponent.IsShooting = false;
+            rangeWeaponComponent.MadeShot = true;
         }
     }
 
