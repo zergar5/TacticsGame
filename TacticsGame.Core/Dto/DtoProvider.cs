@@ -40,7 +40,7 @@ public class DtoProvider
     public UnitDto CreateUnitDto(int unitId)
     {
         var woundsComponent = _wounds.Get(unitId);
-        var spriteComponent = _sprites.Get(unitId);
+        //var spriteComponent = _sprites.Get(unitId);
 
         var weaponDtos = new Dictionary<int, WeaponDto>();
 
@@ -53,7 +53,7 @@ public class DtoProvider
         }
 
         var unitDto = new UnitDto(unitId, woundsComponent.Wounds, woundsComponent.RemainingWounds,
-            _assetsProvider.GetPath(spriteComponent.Sprite), weaponDtos);
+                      _assetsProvider.GetPath(spriteComponent.Sprite), weaponDtos);
 
         return unitDto;
     }

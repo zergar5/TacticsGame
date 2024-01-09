@@ -20,12 +20,16 @@ using TacticsGame.Core.Mechanics.Queue;
 using TacticsGame.Core.Providers;
 using System.Collections.Specialized;
 using TacticsGame.Core.Dto;
+using System.Collections;
+using TacticsGame.GameUI;
+using SharpGL.SceneGraph.Primitives;
+using TacticsGame.Cards;
 
 namespace TacticsGame;
 
 public partial class MainWindow : Window
 {
-    private static string _path = @$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\Units\";
+    
     //private List<Unit> _units = new List<Unit>{
     //        new(_path + "\\hero1.jpg", 80),
     //        new(_path + "\\hero2.jpg", 70),
@@ -33,14 +37,7 @@ public partial class MainWindow : Window
     //        new(_path + "\\hero1.jpg", 70),
     //        new(_path + "\\hero1.jpg", 70),
     //        new(_path + "\\hero2.jpg", 1000)};
-    private List<UnitCard> _unitsCards = new List<UnitCard>{
-        new (1, $"{_path}NecronWarrior.jpg", 100, 100),
-        new (2, $"{_path}Termagant.jpg", 80, 80) };
-        //new ("Unit 3", $"{_path}u013.jpg", 45, 45),
-        //new ("Unit 4", $"{_path}u014.jpg", 14, 100) };
-    private int _roundNumber = 1;
-    private RoundCard _round = new(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\UI\Round.png");
-    private int _info = 0;
+
     private bool isResizing = false;
     private Game _game;
     private OpenGL _gl;
@@ -53,92 +50,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-
-        string[] imagesPath = Directory.GetFiles(_path);
-        laserButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.1 });
-        laserButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
-        //gunButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
-        //gunButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
-        passButton.SetBinding(Button.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
-        passButton.SetBinding(Button.HeightProperty, new Binding("ActualHeight") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.05 });
-        unitsList.SetBinding(StackPanel.WidthProperty, new Binding("ActualWidth") { Source = this, Converter = new PercentConverter(), ConverterParameter = 0.5 });
-
-        _units.CollectionChanged += CollectionChange;
-        passButton.Click += PassButton_Click;
-
-    }
-    private void FillQueue()
-    {
-        while (unitsList.Children.Count < 10)
-        {
-            if (_roundNumber != 1 && _info == _units.Count || _info > _units.Count)
-            {
-                var roundCard = _round.CreateRoundBorder(_roundNumber);
-                unitsList.Children.Add(roundCard);
-                _info = 0;
-            }
-            foreach (var unit in _units)
-            {
-
-                var unitCard = _unitsCards.Find(x => x.Id.Equals(unit)).CreateBorder(_unitsCards.Find(x => x.Id.Equals(unit)).GetId());
-                unitsList.Children.Add(unitCard);
-
-                _info++;
-
-            }
-            if (_info == _units.Count)
-            {
-                _roundNumber++;
-            }
-
-        }
-    }
-    private void PassButton_Click(object sender, RoutedEventArgs e)
-    {
-        unitsList.Children.RemoveAt(0);
-        var firstCard = (Border)unitsList.Children[0];
-        var secondCard = (Border)unitsList.Children[1];
-        if (((Grid)firstCard.Child).Children[1] is TextBlock || ((Grid)firstCard.Child).Children[1] is TextBlock && ((Grid)secondCard.Child).Children[1] is TextBlock)
-        {
-            unitsList.Children.Remove(firstCard);
-        }
-        FillQueue();
-    }
-
-    
-    private void CollectionChange(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        switch (e.Action)
-        {
-            case NotifyCollectionChangedAction.Add:
-                unitsList.Children.Clear();
-                _roundNumber = 1;
-                _info = 0;
-                FillQueue();
-                break;
-            case NotifyCollectionChangedAction.Remove:
-                var id = e.OldItems[0];
-                var panelChildren = unitsList.Children;
-                for (var i = 0; i < panelChildren.Count; i++)
-                {
-                    var child = (Border)unitsList.Children[i];
-                    if (child.Name != "Unit" + id.ToString())
-                    {
-                        continue;
-                    }
-                    unitsList.Children.Remove(child); // удаляем найденный элемент
-                    i--; // уменьшаем индекс, чтобы не пропустить следующий элемент
-                }
-                FillQueue();
-                break;
-            case NotifyCollectionChangedAction.Move:
-
-                break;
-        }
-        
-        
-
-    }
+        var queuePanel = new UI(QueuePanel, _units, WeaponButton, PassButton, _dtoProvider);
+    }    
 
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
     {
@@ -161,51 +74,7 @@ public partial class MainWindow : Window
 
             isResizing = false;
         }
-    }
-
-    private void FillInTheQueue(object sender, RoutedEventArgs e)
-    {
-
-        while (unitsList.Children.Count < 10)
-        {
-            if (_roundNumber != 1 && _info == _units.Count)
-            {
-                var roundCard = _round.CreateRoundBorder(_roundNumber);
-                roundCard.Unloaded += FillInTheQueue;
-                unitsList.Children.Add(roundCard);
-                _info = 0;
-            }
-
-
-            var unit = _unitsCards[0];
-
-             
-            var unitCard = unit.CreateBorder(unit.GetId());
-            unitCard.Unloaded += FillInTheQueue;
-            unitsList.Children.Add(unitCard);
-            
-            //group.MouseLeftButtonUp += Remove_Card;
-
-            _info++;
-
-            _unitsCards.RemoveAt(0);
-            _unitsCards.Add(unit);
-            if (_info == _units.Count)
-            {
-                _roundNumber++;
-            }
-        }
-    }
-
-    //private void AddUnitImage(Unit unit, StackPanel group)
-    //{
-    //    Image img = new Image();
-    //    img.Height = 60;
-    //    img.Source = unit.Image;
-    //    img.Unloaded += FillInTheQueue;
-
-    //    group.Children.Add(img);
-    //}
+    } 
     //private void AddHealthBar(StackPanel group)
     //{
     //    ProgressBar healthBar = new ProgressBar();
@@ -236,16 +105,7 @@ public partial class MainWindow : Window
     //    healthBar.Value = hp;
     //}
 
-    private void Remove_Card(object sender, RoutedEventArgs e)
-    {
-        unitsList.Children.Remove((Border)sender);
-        var firstCard = (Border)unitsList.Children[0];
-        var secondCard = (Border)unitsList.Children[1];
-        if (((Grid)firstCard.Child).Children[1] is TextBlock && ((Grid)secondCard.Child).Children[1] is TextBlock)
-        {
-            unitsList.Children.Remove(firstCard);
-        }
-    }       
+     
     private void GlWindow_OnOpenGLDraw(object sender, OpenGLRoutedEventArgs args)
     {
         //_game.Update();

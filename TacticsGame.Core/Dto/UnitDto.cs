@@ -16,4 +16,5 @@ public class UnitDto
         Sprite = sprite;
         WeaponsDtos = weaponsDtos;
     }
+
 }
