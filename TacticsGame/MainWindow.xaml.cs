@@ -24,7 +24,7 @@ namespace TacticsGame;
 
 public partial class MainWindow : Window
 {
-    private static string _path = @$"{Directory.GetCurrentDirectory()}\TacticsGame.Core\Assets\Icons\Units\";
+    private static string _path = @$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\Units\";
     //private List<Unit> _units = new List<Unit>{
     //        new(_path + "\\hero1.jpg", 80),
     //        new(_path + "\\hero2.jpg", 70),
@@ -38,7 +38,7 @@ public partial class MainWindow : Window
         //new ("Unit 3", $"{_path}u013.jpg", 45, 45),
         //new ("Unit 4", $"{_path}u014.jpg", 14, 100) };
     private int _roundNumber = 1;
-    private RoundCard _round = new(@$"{Directory.GetCurrentDirectory()}\TacticsGame.Core\Assets\Icons\UI\skull.png");
+    private RoundCard _round = new(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\UI\skull.png");
     private int _info = 0;
     private bool isResizing = false;
     private Game _game;

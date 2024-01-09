@@ -30,11 +30,11 @@ public class UnitsRenderSystem : IEcsInitSystem, IEcsRunSystem
         var battlefields = world.GetPool<BattlefieldComponent>();
         _transforms = world.GetPool<LocationComponent>();
         
-        var textureImage = new Bitmap(@$"{Directory.GetCurrentDirectory()}\TacticsGame.Core\Assets\Icons\Units\u001.jpg");
+        var textureImage = new Bitmap(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\Units\u001.jpg");
 
         _texture1.Create(_gl, textureImage);
 
-        textureImage = new Bitmap(@$"{Directory.GetCurrentDirectory()}\TacticsGame.Core\Assets\Icons\Units\u013.jpg");
+        textureImage = new Bitmap(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\Units\u013.jpg");
 
         _texture2.Create(_gl, textureImage);
 
