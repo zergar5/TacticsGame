@@ -19,6 +19,7 @@ using TacticsGame.Core.Converters;
 using TacticsGame.Core.Mechanics.Queue;
 using TacticsGame.Core.Providers;
 using System.Collections.Specialized;
+using TacticsGame.Core.Dto;
 
 namespace TacticsGame;
 
@@ -47,6 +48,7 @@ public partial class MainWindow : Window
     private MousePositionProvider _positionProvider;
     private StateProvider _stateProvider;
     private ObservableCollection<int> _units = new();
+    private DtoProvider _dtoProvider = new();
 
     public MainWindow()
     {
@@ -274,7 +276,8 @@ public partial class MainWindow : Window
             _positionProvider,
             _stateProvider,
             new CoordinatesConverter(GlWindow.OpenGL),
-            _units
+            _units,
+            _dtoProvider
         );
 
         _gl = args.OpenGL;

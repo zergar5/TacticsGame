@@ -1,4 +1,6 @@
-﻿namespace TacticsGame.Core.Units;
+﻿using TacticsGame.Core.Units.Datasheets;
+
+namespace TacticsGame.Core.Units;
 
 public struct UnitProfileComponent
 {
@@ -13,5 +15,13 @@ public struct UnitProfileComponent
         Toughness = toughness;
         Save = save;
         Wounds = wounds;
+    }
+
+    public UnitProfileComponent(UnitDatasheet unitDatasheet)
+    {
+        Movement = unitDatasheet.Movement;
+        Toughness = unitDatasheet.Toughness;
+        Save = unitDatasheet.Save;
+        Wounds = unitDatasheet.Wounds;
     }
 }

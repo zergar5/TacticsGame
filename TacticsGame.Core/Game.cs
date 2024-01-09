@@ -7,6 +7,7 @@ using TacticsGame.Core.Battlefield.Generators;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Converters;
 using TacticsGame.Core.Damage;
+using TacticsGame.Core.Dto;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
 using TacticsGame.Core.Handlers.StateHandlers;
 using TacticsGame.Core.Mechanics;
@@ -45,7 +46,8 @@ public class Game
         MousePositionProvider positionProvider,
         StateProvider stateProvider,
         CoordinatesConverter coordinatesConverter,
-        ObservableCollection<int> units
+        ObservableCollection<int> units,
+        DtoProvider dtoProvider
     )
     {
         _world = new EcsWorld();
@@ -54,6 +56,8 @@ public class Game
         _battlefieldGenerator = battlefieldGenerator;
         _positionProvider = positionProvider;
         _coordinatesConverter = coordinatesConverter;
+
+        dtoProvider.SetWorld(_world);
 
         _setupSystems = new EcsSystems(_world);
         _setupSystems
