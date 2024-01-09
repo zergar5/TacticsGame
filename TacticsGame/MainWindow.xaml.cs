@@ -34,12 +34,12 @@ public partial class MainWindow : Window
     //        new(_path + "\\hero1.jpg", 70),
     //        new(_path + "\\hero2.jpg", 1000)};
     private List<UnitCard> _unitsCards = new List<UnitCard>{
-        new (1, $"{_path}u001.jpg", 100, 100),
-        new (2, $"{_path}u013.jpg", 80, 80) };
+        new (1, $"{_path}NecronWarrior.jpg", 100, 100),
+        new (2, $"{_path}Termagant.jpg", 80, 80) };
         //new ("Unit 3", $"{_path}u013.jpg", 45, 45),
         //new ("Unit 4", $"{_path}u014.jpg", 14, 100) };
     private int _roundNumber = 1;
-    private RoundCard _round = new(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\UI\skull.png");
+    private RoundCard _round = new(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\UI\Round.png");
     private int _info = 0;
     private bool isResizing = false;
     private Game _game;

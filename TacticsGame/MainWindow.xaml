@@ -76,7 +76,7 @@
                         Margin="0, 0, 0, 10"
                         Background="#d1d1d1"
                         Click="PassButton_OnClick">
-                    <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame.Core\Assets\Icons\UI\pass.png"
+                    <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame.Core\Assets\Icons\UI\TurnPass.png"
 
                            Stretch="Uniform" 
                            HorizontalAlignment="Center"

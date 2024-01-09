@@ -16,11 +16,12 @@ public class AssetsProvider
 
     public AssetsProvider()
     {
-        _assetsPaths.Add("BaseBattlefield", _corePath + @"Textures\Map\bf1.jpg");
-        _assetsPaths.Add("NecronWarrior", _corePath + @"Icons\Units\u001.jpg");
-        _assetsPaths.Add("Termagant", _corePath + @"Icons\Units\u013.jpg");
-        _assetsPaths.Add("GaussFlayer", "");
-        _assetsPaths.Add("Fleshborner", "");
+        _assetsPaths.Add("BaseBattlefield", _corePath + @"Textures\Map\BaseBattlefield.jpg");
+        _assetsPaths.Add("NecronWarrior", _corePath + @"Icons\Units\NecronWarrior.jpg");
+        _assetsPaths.Add("Termagant", _corePath + @"Icons\Units\Termagant.jpg");
+        _assetsPaths.Add("GaussFlayer", _corePath + @"Icons\Weapons\GaussFlayer.jpg");
+        //Не забыть поменять
+        _assetsPaths.Add("Fleshborner", _corePath + @"Icons\Weapons\GaussFlayer.jpg");
     }
 
     public void InitGl(OpenGL gl)
