@@ -53,7 +53,7 @@
             <StackPanel x:Name="bottomPanel"
                         Orientation="Horizontal"
                         HorizontalAlignment="Center">
-                <Button x:Name="gunButton"
+                <!--<Button x:Name="gunButton"
                         Padding="2"
                         Margin="0, 0, 0, 10"
                         Background="#d1d1d1">
@@ -61,7 +61,7 @@
                        Stretch="Uniform" 
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"></Image>
-                </Button>
+                </Button>-->
                 <Button x:Name="laserButton"
                         Padding="2"
                         Margin="0, 0, 0, 10"
