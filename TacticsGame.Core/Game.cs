@@ -20,6 +20,7 @@ using TacticsGame.Core.Render;
 using TacticsGame.Core.Scene;
 using TacticsGame.Core.Shooting;
 using TacticsGame.Core.Units;
+using TacticsGame.Core.Weapons;
 
 namespace TacticsGame.Core;
 
@@ -32,6 +33,7 @@ public class Game
     private readonly Cartographer _cartographer;
     private readonly MousePositionProvider _positionProvider;
     private readonly CoordinatesConverter _coordinatesConverter;
+    private AssetsProvider _assetsProvider;
 
     private readonly EcsSystems _setupSystems;
     private readonly EcsSystems _gameplaySystems;
@@ -52,6 +54,7 @@ public class Game
     {
         _world = new EcsWorld();
         _entityBuilder = new EntityBuilder(_world);
+        _assetsProvider = new AssetsProvider();
 
         _battlefieldGenerator = battlefieldGenerator;
         _positionProvider = positionProvider;
@@ -63,7 +66,8 @@ public class Game
         _setupSystems
             .Add(new InitBattlefieldSystem())
             .Add(new UnitSpawnerSystem())
-            .Inject(_entityBuilder, _battlefieldGenerator)
+            .Inject(_entityBuilder, _battlefieldGenerator, _assetsProvider)
+            .Inject(new WeaponFactory(_entityBuilder), new UnitFactory(_entityBuilder))
             .Init();
 
         _cartographer = new Cartographer(_world);
@@ -102,6 +106,8 @@ public class Game
 
     public void InitRenderSystems(OpenGL gl)
     {
+        _assetsProvider.InitGl(gl);
+
         _renderSystems = new EcsSystems(_world);
         _renderSystems
             .Add(new InitRenderSystem())
@@ -109,6 +115,7 @@ public class Game
             .Add(new UIRenderSystem())
             .Add(new UnitsRenderSystem())
             .Inject(gl, _cartographer, new MousePositionHandler(_positionProvider, _coordinatesConverter))
+            .Inject(_assetsProvider)
             .Init();
     }
 

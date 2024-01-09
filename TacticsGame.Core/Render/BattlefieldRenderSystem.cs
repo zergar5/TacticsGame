@@ -4,17 +4,18 @@ using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System.Drawing;
 using TacticsGame.Core.Battlefield;
+using TacticsGame.Core.Providers;
 
 namespace TacticsGame.Core.Render;
 
 public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
 {
     [EcsInject] private OpenGL _gl;
+    [EcsInject] private AssetsProvider _assetsProvider;
 
     private EcsFilter _battlefieldFilter;
 
     private EcsPool<BattlefieldComponent> _battlefields;
-    private Texture _texture = new();
 
     public void Init(IEcsSystems systems)
     {
@@ -23,20 +24,11 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
         _battlefieldFilter = world.Filter<BattlefieldComponent>().End();
 
         _battlefields = world.GetPool<BattlefieldComponent>();
-
-        _gl.Enable(OpenGL.GL_TEXTURE_2D);
-
-        var textureImage = new Bitmap(@$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Textures\Map\bf1.jpg");
-
-        _texture.Create(_gl, textureImage);
-
-        //_texture.Bind(_gl);
     }
 
     public void Run(IEcsSystems systems)
     {
-        //_gl.ActiveTexture(_texture.TextureName);
-        _gl.BindTexture(OpenGL.GL_TEXTURE_2D, _texture.TextureName);
+        _gl.BindTexture(OpenGL.GL_TEXTURE_2D, _assetsProvider.GetTexture("BaseBattlefield"));
         
         _gl.Color(1f, 1f, 1f, 1f);
         _gl.Begin(OpenGL.GL_TRIANGLE_FAN);
@@ -53,10 +45,6 @@ public class BattlefieldRenderSystem : IEcsInitSystem, IEcsRunSystem
         _gl.End();
 
         _gl.BindTexture(OpenGL.GL_TEXTURE_2D, 0);
-
-        //_gl.Disable(OpenGL.GL_TEXTURE_2D);
-
-        _gl.LineWidth(2);
 
         RenderBattlefield();
     }

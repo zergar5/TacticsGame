@@ -14,6 +14,10 @@ public class InitRenderSystem : IEcsInitSystem, IEcsRunSystem
 
         _gl.Enable(OpenGL.GL_BLEND);
         _gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+
+        _gl.Enable(OpenGL.GL_TEXTURE_2D);
+
+        _gl.LineWidth(2);
     }
 
     public void Run(IEcsSystems systems)

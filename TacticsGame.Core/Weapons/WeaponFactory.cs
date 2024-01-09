@@ -19,6 +19,8 @@ public class WeaponFactory
     public WeaponFactory(EntityBuilder entityBuilder)
     {
         _entityBuilder = entityBuilder;
+
+        InitFactoryMethods();
     }
 
     public void InitFactoryMethods()

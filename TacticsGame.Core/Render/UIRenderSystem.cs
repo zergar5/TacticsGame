@@ -4,6 +4,7 @@ using SharpGL;
 using System.Drawing;
 using TacticsGame.Core.Battlefield;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
+using TacticsGame.Core.Movement;
 using TacticsGame.Core.Movement.Reachability;
 using TacticsGame.Core.Scene;
 using TacticsGame.Core.Units;
@@ -21,6 +22,7 @@ public class UIRenderSystem : IEcsInitSystem, IEcsRunSystem
 
     private EcsPool<BattlefieldComponent> _battlefield;
     private EcsPool<ReachableTilesComponent> _reachableTiles;
+    private EcsPool<LocationComponent> _locations;
 
     private BattlefieldTiles _battlefieldTiles;
     private SizeF _tileSize;
@@ -34,6 +36,7 @@ public class UIRenderSystem : IEcsInitSystem, IEcsRunSystem
 
         _battlefield = world.GetPool<BattlefieldComponent>();
         _reachableTiles = world.GetPool<ReachableTilesComponent>();
+        _locations = world.GetPool<LocationComponent>();
 
         foreach (var battlefield in _battlefieldFilter)
         {
@@ -46,8 +49,32 @@ public class UIRenderSystem : IEcsInitSystem, IEcsRunSystem
 
     public void Run(IEcsSystems systems)
     {
+        RenderCurrentUnitTile();
         RenderMouseTile();
         RenderReachableTiles();
+    }
+
+    private void RenderCurrentUnitTile()
+    {
+        foreach (var currentUnit in _currentUnitFilter)
+        {
+            var positionIndex = _cartographer.FindTileIndex(_locations.Get(currentUnit).Location);
+
+            if (positionIndex.row == -1 || positionIndex.column == -1) continue;
+
+            var unitTile = _battlefieldTiles[positionIndex];
+
+            _gl.Begin(OpenGL.GL_LINE_LOOP);
+
+            _gl.Color(64/255f, 224/255f, 208/255f, 1f);
+
+            _gl.Vertex(unitTile.Location.X - _tileSize.Width / 2, unitTile.Location.Y - _tileSize.Height / 2);
+            _gl.Vertex(unitTile.Location.X + _tileSize.Width / 2, unitTile.Location.Y - _tileSize.Height / 2);
+            _gl.Vertex(unitTile.Location.X + _tileSize.Width / 2, unitTile.Location.Y + _tileSize.Height / 2);
+            _gl.Vertex(unitTile.Location.X - _tileSize.Width / 2, unitTile.Location.Y + _tileSize.Height / 2);
+
+            _gl.End();
+        }
     }
 
     private void RenderMouseTile()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TacticsGame.Core.Context;
+using TacticsGame.Core.Movement;
 using TacticsGame.Core.Units.Datasheets;
 using TacticsGame.Core.Weapons.Profiles;
 
@@ -18,6 +19,8 @@ namespace TacticsGame.Core.Units
         public UnitFactory(EntityBuilder entityBuilder)
         {
             _entityBuilder = entityBuilder;
+
+            InitFactoryMethods();
         }
 
         public void InitFactoryMethods()
@@ -37,7 +40,8 @@ namespace TacticsGame.Core.Units
         {
             var unitEntity = _entityBuilder
                 .Init()
-                .Set(new UnitProfileComponent())
+                .Set(new UnitProfileComponent(unitDatasheet))
+                .Set(new MovementComponent(unitDatasheet.Movement))
                 .Set(new UnitTurnStateComponent())
                 .Build();
 
