@@ -16,8 +16,4 @@
     <ProjectReference Include="..\TacticsGame.Core\TacticsGame.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="GameQueueUI\" />
-  </ItemGroup>
-
 </Project>
