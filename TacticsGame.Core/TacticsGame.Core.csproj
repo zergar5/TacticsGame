@@ -23,10 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Context\" />
-    <Folder Include="Dto\" />
-    <Folder Include="Units\Datasheets\" />
-    <Folder Include="Weapons\" />
-    <Folder Include="Prefabs\" />
   </ItemGroup>
 
 </Project>

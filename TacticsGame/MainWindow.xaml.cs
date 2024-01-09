@@ -203,9 +203,6 @@ public partial class MainWindow : Window
                 _roundNumber++;
             }
         }
-
-
-
     }
 
     //private void AddUnitImage(Unit unit, StackPanel group)
@@ -246,6 +243,7 @@ public partial class MainWindow : Window
     //{
     //    healthBar.Value = hp;
     //}
+
     private void Remove_Card(object sender, RoutedEventArgs e)
     {
         unitsList.Children.Remove((Border)sender); var firstCard = (Border)unitsList.Children[0];
@@ -265,6 +263,7 @@ public partial class MainWindow : Window
     private void GlWindow_OnOpenGLDraw(object sender, OpenGLRoutedEventArgs args)
     {
         //_game.Update();
+        //_stateProvider.IsMadeTurn = false;
         //_stateProvider.IsMoving = false;
         //_stateProvider.IsShooting = false;
         //_game.Render();
@@ -277,6 +276,7 @@ public partial class MainWindow : Window
         _stateProvider.IsMoving = false;
         _stateProvider.IsShooting = false;
         _game.Render();
+        GlWindow.DoRender();
     }
 
     private void GlWindow_OnOpenGLInitialized(object sender, OpenGLRoutedEventArgs args)
@@ -294,6 +294,7 @@ public partial class MainWindow : Window
         );
 
         _gl = args.OpenGL;
+        GlWindow.RenderTrigger = RenderTrigger.Manual;
 
         _game.InitRenderSystems(args.OpenGL);
 
