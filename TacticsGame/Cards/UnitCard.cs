@@ -10,39 +10,30 @@ using TacticsGame.Converters;
 using SharpGL.SceneGraph.Primitives;
 using System.Windows.Input;
 using Grid = System.Windows.Controls.Grid;
+using TacticsGame.Core.Dto;
 
 namespace TacticsGame.Cards
 {
     public class UnitCard
     {
-        public int Id { get; set; }
-        public string ImagePath { get; set; }
-        public int Health { get; set; }
-        public int MaxHealth { get; set; }
+        private UnitDto _unit;
 
-        public UnitCard(int id, string imagePath, int health, int maxHealth)
+        public UnitCard(UnitDto unit)
         {
-            Id = id;
-            ImagePath = imagePath;
-            Health = health;
-            MaxHealth = maxHealth;
+            _unit = unit;
         }
 
-        public string GetId()
-        {
-            return Id.ToString();
-        }
+        //public string GetId()
+        //{
+        //    return Id.ToString();
+        //}
 
-        public Border CreateBorder(string id)
+        public Border CreateUnitBorder()
         {
             var border = new Border();
             border.BorderThickness = new Thickness(1);
             border.BorderBrush = Brushes.Black;
-            border.Name = "Unit" + id;
-            //border.Margin = new Thickness(10);
-            //border.Padding = new Thickness(5);
-            //StackPanel stackPanel = (StackPanel)Application.Current.MainWindow.FindName("unitsList");
-            //border.SetBinding(Border.WidthProperty, new Binding("ActualWidth") { Source = stackPanel, Converter = new PercentConverter(), ConverterParameter = 0.1 });
+            border.Name = "Unit" + _unit.UnitId.ToString();
             border.SetBinding(Border.WidthProperty, new Binding("ActualWidth") { Source = Application.Current.MainWindow, Converter = new PercentConverter(), ConverterParameter = 0.05 });
 
             var grid = new Grid();
@@ -50,17 +41,17 @@ namespace TacticsGame.Cards
             grid.RowDefinitions.Add(new RowDefinition());
 
             var image = new Image();
-            image.Source = new BitmapImage(new Uri(ImagePath, UriKind.Absolute));
+            image.Source = new BitmapImage(new Uri(_unit.Sprite, UriKind.Absolute));
             image.Stretch = Stretch.Uniform;
 
-            image.SetBinding(Image.WidthProperty, new Binding("ActualWidth") { Source = border});
+            image.SetBinding(Image.WidthProperty, new Binding("ActualWidth") { Source = border });
 
             border.SetBinding(Border.HeightProperty, new Binding("ActualHeight") { Source = image, Converter = new PercentConverter(), ConverterParameter = 1.2 });
-            
+
             Grid.SetRow(image, 0);
 
             var healthPoints = new ProgressBar();
-            healthPoints.Value = (double)Health / MaxHealth * 100;
+            healthPoints.Value = (double)_unit.RemainingWounds / _unit.Wounds * 100;
             healthPoints.MinHeight = 10;
             healthPoints.Height = border.Height - image.Height;
             healthPoints.Background = new SolidColorBrush(Color.FromRgb(0x24, 0x1e, 0x29));
@@ -74,7 +65,5 @@ namespace TacticsGame.Cards
 
             return border;
         }
-
-
     }
 }

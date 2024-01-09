@@ -50,7 +50,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        var queuePanel = new UI(QueuePanel, _units, WeaponButton, PassButton);
+        var queuePanel = new UI(QueuePanel, _units, WeaponButton, PassButton, _dtoProvider);
     }    
 
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
