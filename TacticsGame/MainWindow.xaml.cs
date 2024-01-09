@@ -191,7 +191,10 @@ public partial class MainWindow : Window
 
     private void GlWindow_OnOpenGLDraw(object sender, OpenGLRoutedEventArgs args)
     {
-
+        //_game.Update();
+        //_stateProvider.IsMoving = false;
+        //_stateProvider.IsShooting = false;
+        //_game.Render();
     }
 
     private void Tick(object sender, EventArgs e)

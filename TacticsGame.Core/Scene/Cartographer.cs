@@ -23,6 +23,8 @@ public class Cartographer
 
     private PointF _bufferLocation;
 
+    private readonly float _epsF = 1e-7f;
+
     public Cartographer(EcsWorld world)
     {
         _world = world;
@@ -85,6 +87,13 @@ public class Cartographer
 
     public bool CheckTileForUnit(Tile tile)
     {
+        foreach (var unit in _unitsFilter)
+        {
+            var location = _locations.Get(unit).Location;
+
+            if(CompareLocations(tile.Location, location)) return true;
+        }
+
         return false;
     }
 
@@ -92,8 +101,12 @@ public class Cartographer
     {
         foreach (var unit in _unitsFilter)
         {
-            
+            var location = _locations.Get(unit).Location;
+
+            if (CompareLocations(tile.Location, location)) return unit;
         }
+
+        return -1;
     }
 
     private int FindRow(PointF location)
@@ -140,5 +153,10 @@ public class Cartographer
     private int CalculateDistanceInTiles((int currentRow, int currentColumn) currentTile, (int row, int column) tile)
     {
         return Math.Abs(tile.row - currentTile.currentRow) + Math.Abs(tile.column - currentTile.currentColumn);
+    }
+
+    private bool CompareLocations(PointF location1, PointF location2)
+    {
+        return Math.Abs(location1.X - location2.X) <= _epsF && Math.Abs(location1.Y - location2.Y) <= _epsF;
     }
 }

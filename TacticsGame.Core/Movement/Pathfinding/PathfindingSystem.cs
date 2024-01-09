@@ -48,7 +48,7 @@ public class PathfindingSystem : IEcsInitSystem, IEcsRunSystem
             _battlefieldTiles = battlefieldComponent.Map;
         }
 
-        _aStar = new AStar(_battlefieldTiles);
+        _aStar = new AStar(_cartographer, _battlefieldTiles);
     }
 
     public void Run(IEcsSystems systems)

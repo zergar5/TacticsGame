@@ -46,7 +46,7 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
             _battlefieldTiles = _battlefields.Get(battlefield).Map;
         }
 
-        _bfs = new BFS(_battlefieldTiles);
+        _bfs = new BFS(_cartographer, _battlefieldTiles);
     }
 
     public void Run(IEcsSystems systems)

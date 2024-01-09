@@ -4,7 +4,6 @@ namespace TacticsGame.Core.Battlefield;
 
 public class BattlefieldTiles
 {
-    //Возможно стоит заменить на бинарное дерево
     private readonly Tile[,] _tiles;
     public SizeF Size { get; }
 
