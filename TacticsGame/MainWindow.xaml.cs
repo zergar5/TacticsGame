@@ -187,4 +187,7 @@ public partial class MainWindow : Window
     {
         _stateProvider.IsMadeTurn = true;
     }
+
+    
+
 }

@@ -16,7 +16,7 @@ namespace TacticsGame.Cards
 {
     public class UnitCard
     {
-        private UnitDto _unit;
+        public UnitDto _unit;
 
         public UnitCard(UnitDto unit)
         {
