@@ -33,7 +33,7 @@ public class UnitSpawnerSystem : IEcsInitSystem
         _entityBuilder
             .Set(unit1, new OwnershipComponent(0))
             .Set(unit2, new OwnershipComponent(0))
-            .Set(unit3, new OwnershipComponent(0));
+            .Set(unit3, new OwnershipComponent(1));
             //.Set(unit4, new OwnershipComponent(1))
             //.Set(unit5, new OwnershipComponent(1))
             //.Set(unit6, new OwnershipComponent(1));
@@ -76,5 +76,7 @@ public class UnitSpawnerSystem : IEcsInitSystem
         //.Set(weapon4, new SpriteComponent("Fleshborer"))
         //.Set(weapon5, new SpriteComponent("Fleshborer"))
         //.Set(weapon6, new SpriteComponent("Fleshborer"));
+
+        _entityBuilder.Set(weapon1, new CurrentWeaponMarker());
     }
 }

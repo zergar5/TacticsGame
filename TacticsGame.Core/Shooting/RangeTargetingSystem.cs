@@ -23,6 +23,7 @@ public class RangeTargetingSystem : IEcsInitSystem, IEcsRunSystem
 
     private EcsPool<RangeWeaponComponent> _rangeWeapons;
     private EcsPool<EligibleTargetsComponent> _eligibleTargets;
+    private EcsPool<TargetComponent> _targets;
     private EcsPool<BattlefieldComponent> _battlefields;
 
     private BattlefieldTiles _battlefieldTiles;
@@ -31,11 +32,12 @@ public class RangeTargetingSystem : IEcsInitSystem, IEcsRunSystem
     {
         var world = systems.GetWorld();
 
-        _currentRangeWeapon = world.Filter<CurrentUnitMarker>().Inc<RangeWeaponProfileComponent>().End();
+        _currentRangeWeapon = world.Filter<CurrentWeaponMarker>().Inc<RangeWeaponProfileComponent>().End();
         _battlefieldFilter = world.Filter<BattlefieldComponent>().End();
 
         _rangeWeapons = world.GetPool<RangeWeaponComponent>();
         _eligibleTargets = world.GetPool<EligibleTargetsComponent>();
+        _targets = world.GetPool<TargetComponent>();
         _battlefields = world.GetPool<BattlefieldComponent>();
 
         foreach (var battlefield in _battlefieldFilter)
@@ -52,7 +54,7 @@ public class RangeTargetingSystem : IEcsInitSystem, IEcsRunSystem
 
             var eligibleTargetsTiles = _eligibleTargets.Get(currentRangeWeapon).EligibleTargetsTiles;
 
-            if (!_shootingStateHandler.GetState()) continue;
+            //if (!_shootingStateHandler.GetState()) continue;
 
             var targetTileIndex =
                 _cartographer.FindTileIndex(_mouseTargetPositionHandler.GetPosition());
@@ -63,10 +65,17 @@ public class RangeTargetingSystem : IEcsInitSystem, IEcsRunSystem
 
             if (!eligibleTargetsTiles.Contains(targetTile)) continue;
 
-            _rangeWeapons.Get(currentRangeWeapon).IsShooting = _shootingStateHandler.GetState();
+            _rangeWeapons.Get(currentRangeWeapon).IsShooting = true;
 
-            _entityBuilder.Set(currentRangeWeapon,
-                new TargetComponent(_cartographer.FindUnitId(targetTile)));
+            if (_targets.Has(currentRangeWeapon))
+            {
+                _targets.Get(currentRangeWeapon).UnitId = _cartographer.FindUnitId(targetTile);
+            }
+            else
+            {
+                _entityBuilder.Set(currentRangeWeapon,
+                    new TargetComponent(_cartographer.FindUnitId(targetTile)));
+            }
         }
     }
 }

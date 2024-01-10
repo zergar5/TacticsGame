@@ -31,6 +31,7 @@ public class DamageSystem : IEcsInitSystem, IEcsRunSystem
         _targets = world.GetPool<TargetComponent>();
         _unitProfiles = world.GetPool<UnitProfileComponent>();
         _hitsResults = world.GetPool<ShootingResultComponent>();
+        _wounds = world.GetPool<WoundsComponent>();
     }
 
     public void Run(IEcsSystems systems)
@@ -63,7 +64,7 @@ public class DamageSystem : IEcsInitSystem, IEcsRunSystem
 
         var rollsResult = _diceRoller.RollD6(hitsResultComponent.SuccessfulWounds);
 
-        var numberOfScoredSaves = rollsResult.Count(rollResult => save >= rollResult - ap);
+        var numberOfScoredSaves = rollsResult.Count(rollResult => save <= rollResult - ap);
 
         hitsResultComponent.Сasualties = hitsResultComponent.SuccessfulWounds - numberOfScoredSaves;
     }
@@ -71,7 +72,7 @@ public class DamageSystem : IEcsInitSystem, IEcsRunSystem
     private void RemoveСasualties(int currentWeapon)
     {
         var hitsResultComponent = _hitsResults.Get(currentWeapon);
-        ref var woundsComponent = ref _wounds.Get(currentWeapon);
+        ref var woundsComponent = ref _wounds.Get(_targets.Get(currentWeapon).UnitId);
 
         if (woundsComponent.RemainingWounds > hitsResultComponent.Сasualties)
         {

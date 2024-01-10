@@ -38,6 +38,7 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
         _reachableTiles = world.GetPool<ReachableTilesComponent>();
         _rangeWeapons = world.GetPool<RangeWeaponProfileComponent>();
         _ownerships = world.GetPool<OwnershipComponent>();
+        _eligibleTargets = world.GetPool<EligibleTargetsComponent>();
 
         _currentUnitFilter = world.Filter<CurrentUnitMarker>().Inc<UnitProfileComponent>().End();
         _battlefieldFilter = world.Filter<BattlefieldComponent>().End();
@@ -97,7 +98,7 @@ public class ReachableTilesFindingSystem : IEcsInitSystem, IEcsRunSystem
         }
         else
         {
-            _entityBuilder.Set(currentWeapon, new ReachableTilesComponent(tiles));
+            _entityBuilder.Set(currentWeapon, new EligibleTargetsComponent(tiles));
         }
     }
 }

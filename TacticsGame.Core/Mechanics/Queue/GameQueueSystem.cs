@@ -84,6 +84,8 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
                 if(_rangeWeapons.Get(currentWeapon).MadeShot) _currentWeaponMarker.Del(currentWeapon);
             }
 
+            RemoveDeadUnits();
+
             var isMadeTurn = _madeTurnStateHandler.GetState();
             
             if (!isMadeTurn) continue;
@@ -91,8 +93,6 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
             _unitsTurnStates.Get(currentUnit).MadeTurn = isMadeTurn;
 
             PassTurn(currentUnit);
-
-            RemoveDeadUnits();
 
             if (CheckForNextRound()) ResetTurnStates();
             
