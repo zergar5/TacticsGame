@@ -54,7 +54,6 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
         _currentUnitMarker = _world.GetPool<CurrentUnitMarker>();
         _currentWeaponMarker = _world.GetPool<CurrentWeaponMarker>();
 
-        _units = _world.GetPool<UnitProfileComponent>();
         _unitsTurnStates = _world.GetPool<UnitTurnStateComponent>();
         _movements = _world.GetPool<MovementComponent>();
         _reachableTiles = _world.GetPool<ReachableTilesComponent>();

@@ -4,7 +4,7 @@ namespace TacticsGame.Core.Handlers.WeaponChangedHandlers;
 
 public class WeaponsChangedHandler
 {
-    private int _weaponId;
+    private int _weaponId = -1;
 
     public WeaponsChangedHandler(CurrentWeaponIdProvider currentWeaponIdProvider)
     {
