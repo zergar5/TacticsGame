@@ -15,7 +15,6 @@ public class UnitSpawnerSystem : IEcsInitSystem
     [EcsInject] private EntityBuilder _entityBuilder;
     [EcsInject] private WeaponFactory _weaponFactory;
     [EcsInject] private UnitFactory _unitFactory;
-    [EcsInject] private AssetsProvider _assetsProvider;
 
     public void Init(IEcsSystems systems)
     {
@@ -50,10 +49,10 @@ public class UnitSpawnerSystem : IEcsInitSystem
         _entityBuilder
             .Set(unit1, new SpriteComponent("NecronWarrior"))
             .Set(unit2, new SpriteComponent("NecronWarrior"))
-            .Set(unit3, new SpriteComponent("Termagant"));
-        //.Set(unit4, new LocationComponent(new PointF(0f, -3f)))
-        //.Set(unit5, new LocationComponent(new PointF(0f, -3f)))
-        //.Set(unit6, new LocationComponent(new PointF(0f, -3f)));
+            .Set(unit3, new SpriteComponent("NecronWarrior"));
+        //.Set(unit4, new SpriteComponent("Termagant"))
+        //.Set(unit5, new SpriteComponent("Termagant"))
+        //.Set(unit6, new SpriteComponent("Termagant"));
 
         var weapon1 = _weaponFactory.CreateWeaponEntity(_weaponFactory.CreateWeapon(0));
         var weapon2 = _weaponFactory.CreateWeaponEntity(_weaponFactory.CreateWeapon(0));
@@ -74,8 +73,8 @@ public class UnitSpawnerSystem : IEcsInitSystem
             .Set(weapon1, new SpriteComponent("GaussFlayer"))
             .Set(weapon2, new SpriteComponent("GaussFlayer"))
             .Set(weapon3, new SpriteComponent("GaussFlayer"));
-        //.Set(weapon4, new OwnershipComponent(unit4))
-        //.Set(weapon5, new OwnershipComponent(unit5))
-        //.Set(weapon6, new OwnershipComponent(unit6));
+        //.Set(weapon4, new SpriteComponent("Fleshborer"))
+        //.Set(weapon5, new SpriteComponent("Fleshborer"))
+        //.Set(weapon6, new SpriteComponent("Fleshborer"));
     }
 }

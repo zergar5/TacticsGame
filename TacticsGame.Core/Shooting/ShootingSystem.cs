@@ -23,7 +23,7 @@ public class ShootingSystem : IEcsInitSystem, IEcsRunSystem
     {
         var world = systems.GetWorld();
 
-        _currentRangeWeapon = world.Filter<CurrentUnitMarker>().Inc<RangeWeaponProfileComponent>().End();
+        _currentRangeWeapon = world.Filter<CurrentWeaponMarker>().Inc<RangeWeaponProfileComponent>().End();
 
         _rangeWeaponProfiles = world.GetPool<RangeWeaponProfileComponent>();
         _rangeWeapons = world.GetPool<RangeWeaponComponent>();
@@ -60,11 +60,15 @@ public class ShootingSystem : IEcsInitSystem, IEcsRunSystem
 
                 rangeWeaponComponent.IsShooting = false;
                 rangeWeaponComponent.MadeShot = true;
+                _targets.Del(currentWeapon);
+                _hitsResults.Del(currentWeapon);
             }
             else
             {
                 rangeWeaponComponent.IsShooting = false;
                 rangeWeaponComponent.MadeShot = true;
+                _targets.Del(currentWeapon);
+                _hitsResults.Del(currentWeapon);
             }
         }
     }

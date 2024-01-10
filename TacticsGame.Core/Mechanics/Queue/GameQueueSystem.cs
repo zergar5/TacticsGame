@@ -1,6 +1,7 @@
 ﻿using Leopotam.EcsLite;
 using SevenBoldPencil.EasyDi;
 using TacticsGame.Core.Context;
+using TacticsGame.Core.Damage;
 using TacticsGame.Core.Handlers.StateHandlers;
 using TacticsGame.Core.Movement;
 using TacticsGame.Core.Movement.Pathfinding;
@@ -16,41 +17,59 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
     [EcsInject] private readonly GameQueue _queue;
     [EcsInject] private readonly MadeTurnStateHandler _madeTurnStateHandler;
 
+    private EcsWorld _world;
+
     private EcsFilter _currentUnitFilter;
     private EcsFilter _unitsFilter;
+    private EcsFilter _currentWeaponFilter;
+    private EcsFilter _weaponsFilter;
 
     private EcsPool<CurrentUnitMarker> _currentUnitMarker;
+    private EcsPool<CurrentWeaponMarker> _currentWeaponMarker;
+
     private EcsPool<UnitProfileComponent> _units;
     private EcsPool<UnitTurnStateComponent> _unitsTurnStates;
     private EcsPool<MovementComponent> _movements;
-    private EcsPool<RangeWeaponComponent> _rangeWeapons;
     private EcsPool<ReachableTilesComponent> _reachableTiles;
     private EcsPool<PathComponent> _pathComponents;
+    private EcsPool<WoundsComponent> _wounds;
 
-    private Dictionary<int, int> _unitsMovements = new();
+    private EcsPool<OwnershipComponent> _ownerships;
+
+    private EcsPool<RangeWeaponComponent> _rangeWeapons;
+
+    private readonly Dictionary<int, int> _unitsMovements = new();
 
     public void Init(IEcsSystems systems)
     {
-        var world = systems.GetWorld();
+        _world = systems.GetWorld();
 
-        _currentUnitFilter = world.Filter<CurrentUnitMarker>().Inc<UnitProfileComponent>().End();
-        _unitsFilter = world.Filter<UnitProfileComponent>().End();
+        _currentUnitFilter = _world.Filter<CurrentUnitMarker>().Inc<UnitProfileComponent>().End();
+        _unitsFilter = _world.Filter<UnitProfileComponent>().End();
 
-        _currentUnitMarker = world.GetPool<CurrentUnitMarker>();
-        _units = world.GetPool<UnitProfileComponent>();
-        _unitsTurnStates = world.GetPool<UnitTurnStateComponent>();
-        _movements = world.GetPool<MovementComponent>();
-        _rangeWeapons = world.GetPool<RangeWeaponComponent>();
-        _reachableTiles = world.GetPool<ReachableTilesComponent>();
-        _pathComponents = world.GetPool<PathComponent>();
+        _currentWeaponFilter = _world.Filter<CurrentWeaponMarker>().Inc<RangeWeaponProfileComponent>().End();
+        _weaponsFilter = _world.Filter<RangeWeaponProfileComponent>().End();
 
+        _currentUnitMarker = _world.GetPool<CurrentUnitMarker>();
+        _currentWeaponMarker = _world.GetPool<CurrentWeaponMarker>();
+
+        _units = _world.GetPool<UnitProfileComponent>();
+        _unitsTurnStates = _world.GetPool<UnitTurnStateComponent>();
+        _movements = _world.GetPool<MovementComponent>();
+        _reachableTiles = _world.GetPool<ReachableTilesComponent>();
+        _pathComponents = _world.GetPool<PathComponent>();
+        _wounds = _world.GetPool<WoundsComponent>();
+
+        _ownerships = _world.GetPool<OwnershipComponent>();
+
+        _rangeWeapons = _world.GetPool<RangeWeaponComponent>();
+        
         MakeUnitsMovementsDictionary();
         _queue.SetUnits(_unitsMovements);
 
         var currentUnit = _queue.NextUnit();
 
         _entityBuilder.Set(currentUnit, new CurrentUnitMarker());
-        //_movements.Get(currentUnit).IsMoving = true;
     }
 
     public void Run(IEcsSystems systems)
@@ -60,6 +79,11 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
 
         foreach (var currentUnit in _currentUnitFilter)
         {
+            foreach (var currentWeapon in _currentWeaponFilter)
+            {
+                if(_rangeWeapons.Get(currentWeapon).MadeShot) _currentWeaponMarker.Del(currentWeapon);
+            }
+
             var isMadeTurn = _madeTurnStateHandler.GetState();
             
             if (!isMadeTurn) continue;
@@ -67,6 +91,8 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
             _unitsTurnStates.Get(currentUnit).MadeTurn = isMadeTurn;
 
             PassTurn(currentUnit);
+
+            RemoveDeadUnits();
 
             if (CheckForNextRound()) ResetTurnStates();
             
@@ -76,7 +102,7 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
             _currentUnitMarker.Del(currentUnit);
 
             ResetMovement(nextUnit);
-            //ResetShooting(nextUnit);
+            ResetShooting(nextUnit);
         }
     }
 
@@ -84,6 +110,17 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
     {
         _reachableTiles.Del(unit);
         _pathComponents.Del(unit);
+    }
+
+    private void RemoveDeadUnits()
+    {
+        foreach (var unit in _unitsFilter)
+        {
+            if (_wounds.Get(unit).RemainingWounds != 0) continue;
+
+            _world.DelEntity(unit);
+            _queue.RemoveUnit(unit);
+        }
     }
 
     private bool CheckForNextRound()
@@ -114,7 +151,10 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
 
     private void ResetShooting(int unit)
     {
-        _rangeWeapons.Get(unit).MadeShot = false;
+        foreach (var weapon in _weaponsFilter)
+        {
+            if(_ownerships.Get(weapon).OwnerId == unit) _rangeWeapons.Get(weapon).MadeShot = false;
+        }
     }
 
     private void MakeUnitsMovementsDictionary()
