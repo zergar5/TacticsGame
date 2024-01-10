@@ -21,6 +21,7 @@ using TacticsGame.Core.Providers;
 using System.Collections.Specialized;
 using TacticsGame.Core.Dto;
 using System.Collections;
+using System.Windows.Controls.Primitives;
 using TacticsGame.GameUI;
 using SharpGL.SceneGraph.Primitives;
 using TacticsGame.Cards;
@@ -51,7 +52,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        var queuePanel = new UI(QueuePanel, _units, WeaponButton, PassButton, _dtoProvider);
+        var queuePanel = new UI(QueuePanel, _units, new Button(), PassButton, _dtoProvider);
     }    
 
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -118,6 +119,7 @@ public partial class MainWindow : Window
         _stateProvider.IsMadeTurn = false;
         _stateProvider.IsMoving = false;
         _stateProvider.IsShooting = false;
+        _positionProvider.TargetPosition = PointF.Empty;
         _game.Render();
         GlWindow.DoRender();
     }
@@ -187,9 +189,9 @@ public partial class MainWindow : Window
 
     private void WeaponButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var button = sender as Button;
+        var button = sender as ToggleButton;
 
-        if (button.IsPressed) _currentWeaponIdProvider.WeaponId = (int)button.Tag;
+        if ((bool)button.IsChecked) _currentWeaponIdProvider.WeaponId = 4;
         else _currentWeaponIdProvider.WeaponId = -1;
     }
 }

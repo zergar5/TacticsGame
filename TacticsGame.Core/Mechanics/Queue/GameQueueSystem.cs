@@ -83,7 +83,7 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
 
             if (chosenWeapon != -1)
             {
-                if (!_rangeWeapons.Get(chosenWeapon).MadeShot)
+                if (!_rangeWeapons.Get(chosenWeapon).MadeShot && !_currentWeaponMarker.Has(chosenWeapon))
                 {
                     _entityBuilder.Set(chosenWeapon, new CurrentWeaponMarker());
                 }
@@ -91,7 +91,7 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
 
             foreach (var currentWeapon in _currentWeaponFilter)
             {
-                if(_rangeWeapons.Get(currentWeapon).MadeShot) _currentWeaponMarker.Del(currentWeapon);
+                if (_rangeWeapons.Get(currentWeapon).MadeShot) _currentWeaponMarker.Del(currentWeapon);
             }
 
             RemoveDeadUnits();
@@ -163,7 +163,10 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var weapon in _weaponsFilter)
         {
-            if(_ownerships.Get(weapon).OwnerId == unit) _rangeWeapons.Get(weapon).MadeShot = false;
+            if (_ownerships.Get(weapon).OwnerId == unit)
+            {
+                _rangeWeapons.Get(weapon).MadeShot = false;
+            }
         }
     }
 

@@ -136,6 +136,8 @@ public class UIRenderSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var currentWeapon in _currentWeaponFilter)
         {
+            if (!_eligibleTargets.Has(currentWeapon)) continue;
+
             var eligibleTiles = _eligibleTargets.Get(currentWeapon).EligibleTargetsTiles;
 
             foreach (var tile in eligibleTiles)

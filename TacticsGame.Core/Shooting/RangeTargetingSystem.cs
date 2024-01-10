@@ -73,6 +73,8 @@ public class RangeTargetingSystem : IEcsInitSystem, IEcsRunSystem
                 _entityBuilder.Set(currentRangeWeapon,
                     new TargetComponent(_cartographer.FindUnitId(targetTile)));
             }
+
+            _eligibleTargets.Del(currentRangeWeapon);
         }
     }
 }
