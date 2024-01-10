@@ -147,7 +147,7 @@ namespace TacticsGame.GameUI
                 {
                     _currentCard = unitCard.Value;
                     _currentCardIndex = unitCard.Key;
-                    _weaponButton.Tag = _currentCard._unit.WeaponsDtos[0].WeaponId;
+                    //_weaponButton.Tag = _currentCard._unit.WeaponsDtos[0].WeaponId;
                     if (_queuePanel.Children.Count == 10)
                     {                        
                         break;
@@ -166,7 +166,7 @@ namespace TacticsGame.GameUI
             }
             _currentCard = _unitsCards.First().Value;
             _currentCardIndex = _unitsCards.First().Key;
-            _weaponButton.Tag = _currentCard._unit.WeaponsDtos[0].WeaponId;
+            //_weaponButton.Tag = _currentCard._unit.WeaponsDtos.GetValueOrDefault().WeaponId;
         }
         private void Remove_Card(object sender, RoutedEventArgs e)
         {
@@ -179,7 +179,7 @@ namespace TacticsGame.GameUI
             }
             int index = _unitsCards.FirstOrDefault(x => x.Value == _currentCard).Key;
             _currentCard = _unitsCards.SkipWhile(x => x.Key != index).Skip(1).FirstOrDefault().Value;
-            _weaponButton.Tag = _currentCard._unit.WeaponsDtos[0].WeaponId;
+            //_weaponButton.Tag = _currentCard._unit.WeaponsDtos[0].WeaponId;
         }
         private void PassButton_Click(object sender, RoutedEventArgs e)
         {            
