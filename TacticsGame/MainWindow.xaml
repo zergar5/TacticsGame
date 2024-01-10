@@ -66,8 +66,8 @@
                         Padding="2"
                         Margin="0, 0, 0, 10"
                         Background="#d1d1d1"
-                        Click="WeaponButton_OnClick">
-                    <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame.Core\Assets\Icons\Units\gauss flayer.png"
+                        >
+                    <Image Source="\Assets\Icons\Weapons\GaussFlayer.png"
                            Stretch="Uniform" 
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"></Image>
@@ -77,7 +77,7 @@
                         Margin="0, 0, 0, 10"
                         Background="#d1d1d1"
                         Click="PassButton_OnClick">
-                    <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame.Core\Assets\Icons\UI\TurnPass.png"
+                    <Image Source="\Assets\Icons\UI\TurnPass.png"
 
                            Stretch="Uniform" 
                            HorizontalAlignment="Center"

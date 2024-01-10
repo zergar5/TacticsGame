@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Shapes;
 using TacticsGame.Cards;
 using TacticsGame.Converters;
@@ -30,6 +32,8 @@ namespace TacticsGame.GameUI
         private static string _path = @$"{Directory.GetCurrentDirectory()}\TacticsGame\Assets\Icons\Units\";
         private Dictionary<int, UnitCard> _unitsCards = new();
         private DtoProvider _dtoProvider;
+        private UnitCard _currentCard;
+        private int _currentCardIndex;
         public UI(StackPanel queuePanel, ObservableCollection<int> units, Button weaponButton, Button passButton, DtoProvider dtoProvider)
         {
             _queuePanel = queuePanel;
@@ -39,6 +43,7 @@ namespace TacticsGame.GameUI
             _dtoProvider = dtoProvider;
             SetBindings();
             _passButton.Click += PassButton_Click;
+            //_weaponButton.Click += WeaponButton_Click;
             _units.CollectionChanged += ChangeCollection;
         }
         public void SetBindings()
@@ -60,7 +65,18 @@ namespace TacticsGame.GameUI
                     _queuePanel.Children.Clear();
                     _round = 1;
                     _info = 0;
-                    UpdateQueue();
+                    //_currentCard = _unitsCards.Last().Value;
+                    //_currentCardIndex = _unitsCards.Last().Key;
+                    if (_queuePanel.Children.Count > 0)
+                    {
+                        var lastCard = (Border)_queuePanel.Children[^1];
+                        if (((Grid)lastCard.Child).Children[1] is TextBlock)
+                        {
+                            _queuePanel.Children.Remove(lastCard);
+                        }
+                    }                    
+                    FillQueue();
+                    
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     var removedUnit = (int)e.OldItems[0];
@@ -76,7 +92,9 @@ namespace TacticsGame.GameUI
                         i--; // уменьшаем индекс, чтобы не пропустить следующий элемент
                     }                   
                     _unitsCards.Remove(removedUnit);
-                    UpdateQueue();
+
+                    //_currentCard = _unitsCards[0];
+                    UpdateQueue(_currentCard);
                     break;
                 case NotifyCollectionChangedAction.Move:
 
@@ -89,7 +107,33 @@ namespace TacticsGame.GameUI
             var unitCard = new UnitCard(_dtoProvider.CreateUnitDto(unitId));
             _unitsCards.Add(unitId, unitCard);
         }
-        private void UpdateQueue()
+        private void UpdateQueue(UnitCard unitCard)
+        {
+            if (_queuePanel.Children.Count < 10)
+            {
+                if (_round != 1 && _info == _units.Count || _info > _units.Count)
+                {
+                    var roundCard = _roundImagePath.CreateRoundBorder(_round);
+                    _queuePanel.Children.Add(roundCard);
+                    _info = 0;
+                }
+                var border = unitCard.CreateUnitBorder();
+                _queuePanel.Children.Add(border);
+
+                _info++;
+
+                if (_info == _units.Count)
+                {
+                    _round++;
+                }
+            }
+        }
+        private void Update(UnitCard unitCard)
+        {            
+                var border = unitCard.CreateUnitBorder();
+                _queuePanel.Children.Add(border);
+        }
+        private void FillQueue()
         {
             while (_queuePanel.Children.Count < 10)
             {
@@ -99,42 +143,72 @@ namespace TacticsGame.GameUI
                     _queuePanel.Children.Add(roundCard);
                     _info = 0;
                 }
-                foreach (var unitCard in _unitsCards)
+                foreach(var unitCard in _unitsCards)
                 {
-                    var border = unitCard.Value.CreateUnitBorder();
-                    if(_queuePanel.Children.Count >= 10) break;
-                    _queuePanel.Children.Add(border);
+                    _currentCard = unitCard.Value;
+                    _currentCardIndex = unitCard.Key;
+                    _weaponButton.Tag = _currentCard._unit.WeaponsDtos[0].WeaponId;
+                    if (_queuePanel.Children.Count == 10)
+                    {                        
+                        break;
+                    }
+
+                    Update(_currentCard);
 
                     _info++;
-
                 }
+
                 if (_info == _units.Count)
                 {
                     _round++;
                 }
 
             }
+            _currentCard = _unitsCards.First().Value;
+            _currentCardIndex = _unitsCards.First().Key;
+            _weaponButton.Tag = _currentCard._unit.WeaponsDtos[0].WeaponId;
         }
         private void Remove_Card(object sender, RoutedEventArgs e)
         {
-            _queuePanel.Children.Remove((Border)sender);
+            _queuePanel.Children.Remove((Border)sender);            
             var firstCard = (Border)_queuePanel.Children[0];
             var secondCard = (Border)_queuePanel.Children[1];
             if (((Grid)firstCard.Child).Children[1] is TextBlock && ((Grid)secondCard.Child).Children[1] is TextBlock)
             {
                 _queuePanel.Children.Remove(firstCard);
             }
+            int index = _unitsCards.FirstOrDefault(x => x.Value == _currentCard).Key;
+            _currentCard = _unitsCards.SkipWhile(x => x.Key != index).Skip(1).FirstOrDefault().Value;
+            _weaponButton.Tag = _currentCard._unit.WeaponsDtos[0].WeaponId;
         }
         private void PassButton_Click(object sender, RoutedEventArgs e)
-        {
+        {            
+            int index = _unitsCards.FirstOrDefault(x => x.Value == _currentCard).Key;
+            if (index == _unitsCards.Last().Key)
+            {
+                _currentCard = _unitsCards.First().Value;
+                _weaponButton.Tag = _currentCard._unit.WeaponsDtos[0].WeaponId;
+            }
+            else
+            {
+                _currentCard = _unitsCards.SkipWhile(x => x.Key != index).Skip(1).FirstOrDefault().Value;
+                _weaponButton.Tag = _currentCard._unit.WeaponsDtos[0].WeaponId;
+            }
             _queuePanel.Children.RemoveAt(0);
             var firstCard = (Border)_queuePanel.Children[0];
             var secondCard = (Border)_queuePanel.Children[1];
             if (((Grid)firstCard.Child).Children[1] is TextBlock || ((Grid)firstCard.Child).Children[1] is TextBlock && ((Grid)secondCard.Child).Children[1] is TextBlock)
             {
                 _queuePanel.Children.Remove(firstCard);
+
             }
-            UpdateQueue();
+            UpdateQueue(_currentCard);
         }
+
+        //private void WeaponButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var currentWeapon = _currentCard._unit.WeaponsDtos[0];
+        //}
+
     }
 }
