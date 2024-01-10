@@ -7,6 +7,7 @@ using TacticsGame.Core.Handlers.MousePositionHandlers;
 using TacticsGame.Core.Movement;
 using TacticsGame.Core.Movement.Reachability;
 using TacticsGame.Core.Scene;
+using TacticsGame.Core.Shooting;
 using TacticsGame.Core.Units;
 
 namespace TacticsGame.Core.Render;
@@ -19,9 +20,11 @@ public class UIRenderSystem : IEcsInitSystem, IEcsRunSystem
 
     private EcsFilter _currentUnitFilter;
     private EcsFilter _battlefieldFilter;
+    private EcsFilter _currentWeaponFilter;
 
     private EcsPool<BattlefieldComponent> _battlefield;
     private EcsPool<ReachableTilesComponent> _reachableTiles;
+    private EcsPool<EligibleTargetsComponent> _eligibleTargets;
     private EcsPool<LocationComponent> _locations;
 
     private BattlefieldTiles _battlefieldTiles;
@@ -33,9 +36,11 @@ public class UIRenderSystem : IEcsInitSystem, IEcsRunSystem
 
         _currentUnitFilter = world.Filter<CurrentUnitMarker>().End();
         _battlefieldFilter = world.Filter<BattlefieldComponent>().End();
+        _currentWeaponFilter = world.Filter<CurrentWeaponMarker>().End();
 
         _battlefield = world.GetPool<BattlefieldComponent>();
         _reachableTiles = world.GetPool<ReachableTilesComponent>();
+        _eligibleTargets = world.GetPool<EligibleTargetsComponent>();
         _locations = world.GetPool<LocationComponent>();
 
         foreach (var battlefield in _battlefieldFilter)
@@ -52,6 +57,7 @@ public class UIRenderSystem : IEcsInitSystem, IEcsRunSystem
         RenderCurrentUnitTile();
         RenderMouseTile();
         RenderReachableTiles();
+        RenderEligibleTargetsTiles();
     }
 
     private void RenderCurrentUnitTile()
@@ -115,6 +121,41 @@ public class UIRenderSystem : IEcsInitSystem, IEcsRunSystem
                 _gl.Begin(OpenGL.GL_TRIANGLE_FAN);
 
                 _gl.Color(0.45f, 0.45f, 0.45f, 0.4f);
+
+                _gl.Vertex(tile.Location.X - _tileSize.Width / 2, tile.Location.Y - _tileSize.Height / 2);
+                _gl.Vertex(tile.Location.X + _tileSize.Width / 2, tile.Location.Y - _tileSize.Height / 2);
+                _gl.Vertex(tile.Location.X + _tileSize.Width / 2, tile.Location.Y + _tileSize.Height / 2);
+                _gl.Vertex(tile.Location.X - _tileSize.Width / 2, tile.Location.Y + _tileSize.Height / 2);
+
+                _gl.End();
+            }
+        }
+    }
+
+    private void RenderEligibleTargetsTiles()
+    {
+        foreach (var currentWeapon in _currentWeaponFilter)
+        {
+            if (!_eligibleTargets.Has(currentWeapon)) continue;
+
+            var eligibleTiles = _eligibleTargets.Get(currentWeapon).EligibleTargetsTiles;
+
+            foreach (var tile in eligibleTiles)
+            {
+                _gl.Begin(OpenGL.GL_TRIANGLE_FAN);
+
+                _gl.Color(0.45f, 0.45f, 0.45f, 0.4f);
+
+                _gl.Vertex(tile.Location.X - _tileSize.Width / 2, tile.Location.Y - _tileSize.Height / 2);
+                _gl.Vertex(tile.Location.X + _tileSize.Width / 2, tile.Location.Y - _tileSize.Height / 2);
+                _gl.Vertex(tile.Location.X + _tileSize.Width / 2, tile.Location.Y + _tileSize.Height / 2);
+                _gl.Vertex(tile.Location.X - _tileSize.Width / 2, tile.Location.Y + _tileSize.Height / 2);
+
+                _gl.End();
+
+                _gl.Begin(OpenGL.GL_LINE_LOOP);
+
+                _gl.Color(1f, 0f, 0f, 1f);
 
                 _gl.Vertex(tile.Location.X - _tileSize.Width / 2, tile.Location.Y - _tileSize.Height / 2);
                 _gl.Vertex(tile.Location.X + _tileSize.Width / 2, tile.Location.Y - _tileSize.Height / 2);

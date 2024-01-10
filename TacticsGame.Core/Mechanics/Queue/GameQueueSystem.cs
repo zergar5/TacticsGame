@@ -3,6 +3,7 @@ using SevenBoldPencil.EasyDi;
 using TacticsGame.Core.Context;
 using TacticsGame.Core.Damage;
 using TacticsGame.Core.Handlers.StateHandlers;
+using TacticsGame.Core.Handlers.WeaponChangedHandlers;
 using TacticsGame.Core.Movement;
 using TacticsGame.Core.Movement.Pathfinding;
 using TacticsGame.Core.Movement.Reachability;
@@ -16,6 +17,7 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
     [EcsInject] private readonly EntityBuilder _entityBuilder;
     [EcsInject] private readonly GameQueue _queue;
     [EcsInject] private readonly MadeTurnStateHandler _madeTurnStateHandler;
+    [EcsInject] private readonly WeaponsChangedHandler _weaponsChooseHandler;
 
     private EcsWorld _world;
 
@@ -27,7 +29,6 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
     private EcsPool<CurrentUnitMarker> _currentUnitMarker;
     private EcsPool<CurrentWeaponMarker> _currentWeaponMarker;
 
-    private EcsPool<UnitProfileComponent> _units;
     private EcsPool<UnitTurnStateComponent> _unitsTurnStates;
     private EcsPool<MovementComponent> _movements;
     private EcsPool<ReachableTilesComponent> _reachableTiles;
@@ -53,7 +54,6 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
         _currentUnitMarker = _world.GetPool<CurrentUnitMarker>();
         _currentWeaponMarker = _world.GetPool<CurrentWeaponMarker>();
 
-        _units = _world.GetPool<UnitProfileComponent>();
         _unitsTurnStates = _world.GetPool<UnitTurnStateComponent>();
         _movements = _world.GetPool<MovementComponent>();
         _reachableTiles = _world.GetPool<ReachableTilesComponent>();
@@ -79,9 +79,19 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
 
         foreach (var currentUnit in _currentUnitFilter)
         {
+            var chosenWeapon = _weaponsChooseHandler.GetId();
+
+            if (chosenWeapon != -1)
+            {
+                if (!_rangeWeapons.Get(chosenWeapon).MadeShot && !_currentWeaponMarker.Has(chosenWeapon))
+                {
+                    _entityBuilder.Set(chosenWeapon, new CurrentWeaponMarker());
+                }
+            }
+
             foreach (var currentWeapon in _currentWeaponFilter)
             {
-                if(_rangeWeapons.Get(currentWeapon).MadeShot) _currentWeaponMarker.Del(currentWeapon);
+                if (_rangeWeapons.Get(currentWeapon).MadeShot) _currentWeaponMarker.Del(currentWeapon);
             }
 
             RemoveDeadUnits();
@@ -153,7 +163,10 @@ public class GameQueueSystem : IEcsInitSystem, IEcsRunSystem
     {
         foreach (var weapon in _weaponsFilter)
         {
-            if(_ownerships.Get(weapon).OwnerId == unit) _rangeWeapons.Get(weapon).MadeShot = false;
+            if (_ownerships.Get(weapon).OwnerId == unit)
+            {
+                _rangeWeapons.Get(weapon).MadeShot = false;
+            }
         }
     }
 

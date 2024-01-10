@@ -14,7 +14,6 @@ public class Cartographer
     private readonly EcsFilter _currentUnit;
     private readonly EcsFilter _unitsFilter;
 
-    private readonly EcsPool<UnitProfileComponent> _units;
     private readonly EcsPool<LocationComponent> _locations;
     private readonly EcsPool<OwnershipComponent> _ownerships;
 
@@ -36,7 +35,6 @@ public class Cartographer
         _unitsFilter = _world.Filter<UnitProfileComponent>().Exc<CurrentUnitMarker>().End();
 
         var battlefields = _world.GetPool<BattlefieldComponent>();
-        _units = _world.GetPool<UnitProfileComponent>();
         _locations = _world.GetPool<LocationComponent>();
         _ownerships = _world.GetPool<OwnershipComponent>();
 

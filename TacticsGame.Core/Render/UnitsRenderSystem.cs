@@ -53,13 +53,13 @@ public class UnitsRenderSystem : IEcsInitSystem, IEcsRunSystem
             _gl.Begin(OpenGL.GL_TRIANGLE_FAN);
 
             _gl.TexCoord(0f, 1f);
-            _gl.Vertex(location.X - _tileSize.Width / 2, location.Y - _tileSize.Height / 2);
+            _gl.Vertex(location.X - _tileSize.Width / 2.5, location.Y - _tileSize.Height / 2.5);
             _gl.TexCoord(1f, 1f);
-            _gl.Vertex(location.X + _tileSize.Width / 2, location.Y - _tileSize.Height / 2);
+            _gl.Vertex(location.X + _tileSize.Width / 2.5, location.Y - _tileSize.Height / 2.5);
             _gl.TexCoord(1f, 0f);
-            _gl.Vertex(location.X + _tileSize.Width / 2, location.Y + _tileSize.Height / 2);
+            _gl.Vertex(location.X + _tileSize.Width / 2.5, location.Y + _tileSize.Height / 2.5);
             _gl.TexCoord(0f, 0f);
-            _gl.Vertex(location.X - _tileSize.Width / 2, location.Y + _tileSize.Height / 2);
+            _gl.Vertex(location.X - _tileSize.Width / 2.5, location.Y + _tileSize.Height / 2.5);
 
             _gl.End();
 

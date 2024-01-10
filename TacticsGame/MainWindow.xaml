@@ -62,7 +62,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"></Image>
                 </Button>-->
-                <Button x:Name="WeaponButton"
+                <ToggleButton x:Name="WeaponButton"
                         Padding="2"
                         Margin="0, 0, 0, 10"
                         Background="#d1d1d1"
@@ -71,7 +71,7 @@
                            Stretch="Uniform" 
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"></Image>
-                </Button>
+                </ToggleButton>
                 <Button x:Name="PassButton"
                         Padding="2"
                         Margin="0, 0, 0, 10"

@@ -76,7 +76,5 @@ public class UnitSpawnerSystem : IEcsInitSystem
         //.Set(weapon4, new SpriteComponent("Fleshborer"))
         //.Set(weapon5, new SpriteComponent("Fleshborer"))
         //.Set(weapon6, new SpriteComponent("Fleshborer"));
-
-        _entityBuilder.Set(weapon1, new CurrentWeaponMarker());
     }
 }
