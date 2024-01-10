@@ -10,6 +10,7 @@ using TacticsGame.Core.Damage;
 using TacticsGame.Core.Dto;
 using TacticsGame.Core.Handlers.MousePositionHandlers;
 using TacticsGame.Core.Handlers.StateHandlers;
+using TacticsGame.Core.Handlers.WeaponChangedHandlers;
 using TacticsGame.Core.Mechanics;
 using TacticsGame.Core.Mechanics.Queue;
 using TacticsGame.Core.Movement;
@@ -47,6 +48,7 @@ public class Game
         IBattlefieldGenerator battlefieldGenerator,
         MousePositionProvider positionProvider,
         StateProvider stateProvider,
+        CurrentWeaponIdProvider currentWeaponIdProvider,
         CoordinatesConverter coordinatesConverter,
         ObservableCollection<int> units,
         DtoProvider dtoProvider
@@ -76,7 +78,7 @@ public class Game
         _gameplaySystems = new EcsSystems(_world);
         _gameplaySystems
             .Add(new GameQueueSystem())
-            .Inject(new GameQueue(units), _entityBuilder)
+            .Inject(new GameQueue(units), _entityBuilder, new WeaponsChangedHandler(currentWeaponIdProvider))
             .Inject(new MadeTurnStateHandler(stateProvider), new MadeTurnStateHandler(stateProvider))
             .Init();
 

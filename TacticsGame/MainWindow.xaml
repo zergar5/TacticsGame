@@ -65,7 +65,8 @@
                 <Button x:Name="WeaponButton"
                         Padding="2"
                         Margin="0, 0, 0, 10"
-                        Background="#d1d1d1">
+                        Background="#d1d1d1"
+                        Click="WeaponButton_OnClick">
                     <Image Source="C:\Programming\UNI_Projects\TacticsGame\TacticsGame.Core\Assets\Icons\Units\gauss flayer.png"
                            Stretch="Uniform" 
                            HorizontalAlignment="Center"

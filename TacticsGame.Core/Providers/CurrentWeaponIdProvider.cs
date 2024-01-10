@@ -4,7 +4,7 @@ namespace TacticsGame.Core.Providers;
 
 public class CurrentWeaponIdProvider
 {
-    private int _weaponId;
+    private int _weaponId = -1;
 
     public int WeaponId
     {

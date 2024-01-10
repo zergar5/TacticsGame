@@ -44,6 +44,7 @@ public partial class MainWindow : Window
     private DispatcherTimer _timer;
     private MousePositionProvider _positionProvider;
     private StateProvider _stateProvider;
+    private CurrentWeaponIdProvider _currentWeaponIdProvider;
     private ObservableCollection<int> _units = new();
     private DtoProvider _dtoProvider = new();
 
@@ -108,11 +109,7 @@ public partial class MainWindow : Window
      
     private void GlWindow_OnOpenGLDraw(object sender, OpenGLRoutedEventArgs args)
     {
-        //_game.Update();
-        //_stateProvider.IsMadeTurn = false;
-        //_stateProvider.IsMoving = false;
-        //_stateProvider.IsShooting = false;
-        //_game.Render();
+
     }
 
     private void Tick(object sender, EventArgs e)
@@ -129,12 +126,14 @@ public partial class MainWindow : Window
     {
         _positionProvider = new MousePositionProvider();
         _stateProvider = new StateProvider();
+        _currentWeaponIdProvider = new CurrentWeaponIdProvider();
 
         _game = new Game
         (
             new BasicGenerator(),
             _positionProvider,
             _stateProvider,
+            _currentWeaponIdProvider,
             new CoordinatesConverter(GlWindow.OpenGL),
             _units,
             _dtoProvider
@@ -166,7 +165,6 @@ public partial class MainWindow : Window
     {
         var position = e.GetPosition(this);
 
-        //Возможно, стоит определить заранее
         var point = new PointF((float)position.X, (float)(GlWindow.ActualHeight - position.Y));
 
         _positionProvider.TargetPosition = point;
@@ -177,7 +175,6 @@ public partial class MainWindow : Window
     {
         var position = e.GetPosition(this);
 
-        //Возможно, стоит определить заранее
         var point = new PointF((float)position.X, (float)(GlWindow.ActualHeight - position.Y));
 
         _positionProvider.Position = point;
@@ -186,5 +183,13 @@ public partial class MainWindow : Window
     private void PassButton_OnClick(object sender, RoutedEventArgs e)
     {
         _stateProvider.IsMadeTurn = true;
+    }
+
+    private void WeaponButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+
+        if (button.IsPressed) _currentWeaponIdProvider.WeaponId = (int)button.Tag;
+        else _currentWeaponIdProvider.WeaponId = -1;
     }
 }

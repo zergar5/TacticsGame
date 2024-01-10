@@ -14,7 +14,6 @@ namespace TacticsGame.Core.Shooting;
 public class RangeTargetingSystem : IEcsInitSystem, IEcsRunSystem
 {
     [EcsInject] private readonly MouseTargetPositionHandler _mouseTargetPositionHandler;
-    [EcsInject] private readonly ShootingStateHandler _shootingStateHandler;
     [EcsInject] private readonly Cartographer _cartographer;
     [EcsInject] private readonly EntityBuilder _entityBuilder;
 
@@ -53,8 +52,6 @@ public class RangeTargetingSystem : IEcsInitSystem, IEcsRunSystem
             if (!_eligibleTargets.Has(currentRangeWeapon)) continue;
 
             var eligibleTargetsTiles = _eligibleTargets.Get(currentRangeWeapon).EligibleTargetsTiles;
-
-            //if (!_shootingStateHandler.GetState()) continue;
 
             var targetTileIndex =
                 _cartographer.FindTileIndex(_mouseTargetPositionHandler.GetPosition());
